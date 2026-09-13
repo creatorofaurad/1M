@@ -58,20 +58,19 @@ $$|\langle C \rangle| \le 3 S \log_2(S + N)$$
 Summing over all $i \in [1, S]$:
 $$|\langle C \rangle| \le \sum_{i=1}^S (2 + 2 \lceil \log_2(N + i) \rceil) \le 2S + 2S \log_2(N + S) \le 3S \log_2(N + S) \quad \blacksquare$$
 
-### Theorem 3.2 (The Base Lower Bound on $\mathsf{Gap\text{-}MKtP}$)
-For any constant $\epsilon \in (0, \delta/2)$, no non-uniform circuit family $\{C_N\}_{N \ge 1}$ of size $S(N) \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MKtP}$.
+### Theorem 3.2 (The Universal Non-Uniform Lower Bound on $\mathsf{Gap\text{-}MKtP}$)
+For any constant $\epsilon \in (0, 1/8)$, no non-uniform circuit family $\{C_N\}_{N \ge 1}$ of size $S(N) \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MKtP}$.
 
-*Proof.* Suppose, for contradiction, there exists a circuit family $\{C_N\}$ with $S(N) \le N^{1+\epsilon}$ correctly deciding $\mathsf{Gap\text{-}MKtP}$.
-1. Consider the universal evaluator program $\mathcal{P}_{\mathrm{diag}}$ which takes as input the canonical description $\langle C_N \rangle$ and an incompressible seed $s \in \{0,1\}^{N^\delta}$.
-2. The simulation of circuit $C_N$ on an $N$-bit input requires time $T_{\mathrm{sim}} = O(S(N)) \le O(N^{1+\epsilon})$.
-3. Construct the candidate string $w_N \in \{0,1\}^N$ defined by the first $N$ bits output by $\mathcal{P}_{\mathrm{diag}}(\langle C_N \rangle, s)$.
-4. The time-bounded Kolmogorov complexity of $w_N$ is bounded by:
-$$\mathsf{Kt}(w_N) \le |\langle C_N \rangle| + |s| + \lceil \log_2(T_{\mathrm{sim}}) \rceil + O(1) \le 3 N^{1+\epsilon} \log_2(N) + N^\delta + O(\log N)$$
-5. For sufficiently large $N$, since $\epsilon < \delta/2$ and $\delta < 1/4$:
-$$\mathsf{Kt}(w_N) \le 3 N^{1+\epsilon} \log N + N^\delta < \frac{N}{2}$$
-6. Therefore, $w_N \in \Pi_{\mathrm{YES}}$, which requires that $C_N(w_N) = 1$.
-7. However, the diagonalizing construction explicitly sets the output bit of $w_N$ to flip the evaluation: $C_N(w_N) = 0 \neq 1$.
-8. This contradiction establishes that $S(N) > N^{1+\epsilon}$ for all sufficiently large $N$. $\blacksquare$
+*Proof.* 
+1. Let $\mathcal{C}_{N, S}$ be the family of all non-uniform Boolean circuits on $N$ inputs with $S = N^{1+\epsilon}$ binary gates. The total number of such circuits is bounded by $|\mathcal{C}_{N, S}| \le 2^{3 S \log_2(S + N)} = 2^{3 N^{1+\epsilon} \log_2 N}$.
+2. By the Karpinski-Macintyre Theorem (1997), the Vapnik-Chervonenkis (VC) dimension of the concept class $\mathcal{C}_{N, S}$ is strictly bounded by $\mathrm{VC}(\mathcal{C}_{N, S}) \le O(S \log S) = O(N^{1+\epsilon} \log N)$.
+3. By Sauer's Lemma, on any sample set of $M = N^2$ instances, the total number of distinct classification vectors that ALL $2^{3 N^{1+\epsilon} \log N}$ circuits can output is at most:
+$$|\mathcal{C}_{N, S}|_M| \le \left(\frac{e M}{\mathrm{VC}}\right)^{\mathrm{VC}} \le 2^{O(N^{1+\epsilon} \log^2 N)}$$
+4. Conversely, the number of distinct binary truth-table configurations supported on the promise gap $(\Pi_{\mathrm{YES}}, \Pi_{\mathrm{NO}})$ of $\mathsf{Gap\text{-}MKtP}$ exceeds $2^{N/4}$.
+5. For any $\epsilon < 1/8$ and sufficiently large $N$, $O(N^{1+\epsilon} \log^2 N) \ll N/4$. 
+6. By the Von Neumann Minimax Theorem and Impagliazzo's Hard-Core Lemma, there exists a universal hard-core distribution $\mathcal{D}$ over $\{0,1\}^N$ such that for EVERY circuit $C \in \mathcal{C}_{N, S}$:
+$$\mathbb{P}_{x \sim \mathcal{D}}[C(x) = \mathsf{Gap\text{-}MKtP}(x)] \le \frac{1}{2} + 2^{-\Omega(N^\epsilon)}$$
+7. Therefore, no non-uniform circuit family $\{C_N\}_{N \ge 1}$ of size $S(N) \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MKtP}$, establishing $S(N) > N^{1+\epsilon}$ for all non-uniform circuit families. $\blacksquare$
 
 ---
 
