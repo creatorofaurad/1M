@@ -1,0 +1,23 @@
+You are a senior referee for Annals of Mathematics and STOC.
+Conduct a rigorous line-by-line mathematical audit of the proposed theorem in ROUND_50_IMPAGLIAZZO_HARDCORE_ISOPERIMETRY.md:
+
+---
+
+### PROPOSED THEOREM (Round 50):
+To eliminate the sparse measure trap (where mu(A) <= 2^{-3N/4} under the uniform measure), Round 50 applies Impagliazzo's Hard-Core Lemma (1995) to construct a hard-core distribution D_C for any candidate circuit C_N of size S <= N / log^2 N.
+
+1. Under D_C, the hard-core set has measure mu_{D_C}(A) = 1/2 and mu_{D_C}(B) = 1/2.
+2. Because the measure under D_C is constant (1/2), the measure-scaling factor in Talagrand's isoperimetric inequality is alpha * log(1/alpha) = 1/2 * log(2) = 1/2 = Theta(1).
+3. The Hamming distance between A and B is D = Omega(N / log N).
+4. Therefore, total influence under D_C satisfies Inf_{D_C}(C_N) >= Omega(N / log N).
+5. Comparing with circuit sensitivity Inf(C_N) <= S * log S yields S >= Omega(N / log^2 N).
+6. By Chen-Jin-Williams (2019), this magnifies to NP not in P/poly ==> P != NP.
+
+---
+
+### YOUR REFEREE TASK:
+1. Does Impagliazzo's Hard-Core Lemma apply when the underlying language L is a PROMISE problem (Gap-MKtP) where A is exponentially small?
+   Specifically: If the base language has |A| <= 2^{N/4} elements in a space of size 2^N, can a distribution D_C with density delta >= 1/2 (i.e. D_C(x) <= 1 / (delta * 2^N)) assign measure 1/2 to A?
+   (Notice: If D_C(x) <= 2 / 2^N, then the total measure of A under D_C is sum_{x in A} D_C(x) <= |A| * 2 / 2^N <= 2^{N/4} * 2 / 2^N = 2^{-3N/4 + 1}, which is STILL exponentially small!).
+2. Does the density condition D_C(x) <= 1/(delta * 2^N) mathematically force mu_{D_C}(A) <= 2^{-3N/4 + 1}?
+3. Deliver an unambiguous verdict: [PASS / FAIL WITH MATHEMATICAL PROOF].
