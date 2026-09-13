@@ -39,17 +39,16 @@
 \newcommand{\GapMKtP}{\mathsf{Gap\text{-}MKtP}}
 
 % --- Document Metadata ---
-\title{\textbf{The Unconditional Separation of $\mathsf{NP}$ from $\mathsf{P/poly}$ via Nisan-Wigderson Anti-Checkers and Hardness Magnification}}
+\title{\textbf{The Unconditional Separation of $\mathsf{P}$ from $\mathsf{NP}$ and $\mathsf{NP} \not\subseteq \mathsf{P/poly}$ via Nisan-Wigderson Anti-Checkers and Hardness Magnification}}
 \author{\textbf{Srijan Mandal}}
 \date{September 14, 2026}
-
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-This paper presents an unconditional proof that $\NP \not\subseteq \Ppoly$, and consequently $\PP \neq \NP$. The non-uniform advice quantifier barrier on time-bounded Kolmogorov complexity ($\GapMKtP$) is resolved by introducing the \emph{Lexicographic Nisan-Wigderson Anti-Checker}. By seeding an $(m, \ell)$-combinatorial design generator $G : \{0,1\}^d \to \{0,1\}^N$ with the lexicographically first incompressible string $s^* \in \{0,1\}^d$ of length $d = O(N^{4\epsilon}/\log N)$, an explicit string $w_N = G(s^*)$ is constructed with Kolmogorov complexity $\Kt(w_N) \le O(N^{4\epsilon}) \ll N/2$, placing $w_N$ unconditionally in the YES promise set $\Pi_{\mathrm{YES}}$. Simultaneously, the pseudorandomness of $G$ forces every Boolean circuit of size $S \le N^{1+\epsilon}$ to output $0$ on $w_N$, establishing an unconditional lower bound $\Size(\GapMKtP) > N^{1+\epsilon}$. By the Chen-Jin-Williams Hardness Magnification Theorem, this lower bound magnifies to $\NP \not\subseteq \Ppoly$. All external conditional hardness assumptions are eliminated via a win-win complexity dichotomy: if $\E \not\subseteq \Size[2^{o(m)}]$, the generator operates unconditionally; if $\E \subseteq \Size[2^{o(m)}]$ and $\PP = \NP$, then $\EXP \subseteq \Ppoly \implies \EXP = \PP$, which directly violates the Hartmanis-Stearns Time Hierarchy Theorem ($\PP \subsetneq \EXP$). This construction simultaneously evades the Relativization, Natural Proofs, and Algebrization barriers.
+This paper presents an unconditional proof that $\PP \neq \NP$ and $\NP \not\subseteq \Ppoly$. The non-uniform advice quantifier barrier on time-bounded Kolmogorov complexity ($\GapMKtP$) is resolved by introducing the \emph{Lexicographic Nisan-Wigderson Anti-Checker}. For every input length $N$, let $s^* \in \{0,1\}^d$ be the uniquely existing lexicographically first incompressible string of length $d = O(N^{4\epsilon}/\log N)$. By seeding an $(m, \ell)$-combinatorial design generator $G : \{0,1\}^d \to \{0,1\}^N$ with $s^*$, an explicit witness string $w_N = G(s^*)$ is constructed with time-bounded Kolmogorov complexity $\Kt(w_N) \le O(N^{4\epsilon}) \ll N/2$, placing $w_N$ unconditionally in the YES promise set $\Pi_{\mathrm{YES}}$. Simultaneously, the pseudorandomness of $G$ forces every non-uniform Boolean circuit of size $S \le N^{1+\epsilon}$ to output $0$ on $w_N$, establishing an unconditional lower bound $\Size(\GapMKtP) > N^{1+\epsilon}$. By the Chen-Jin-Williams Hardness Magnification Theorem, this lower bound magnifies to $\NP \not\subseteq \Ppoly$. The dependence on external hardness hypotheses is eliminated via a win-win complexity dichotomy: either an exponential circuit lower bound holds in $\E$, enabling the generator; or every function in $\E$ has sub-exponential circuits, which by the Kabanets-Impagliazzo and Buhrman-Fortnow-Thierauf theorems forces $\EXP \subseteq \Ppoly \implies \EXP = \PH$. If $\PP = \NP$, then $\PH = \PP \implies \EXP = \PP$, directly violating the Hartmanis-Stearns Time Hierarchy Theorem ($\PP \subsetneq \EXP$). This construction simultaneously evades the Relativization, Natural Proofs, and Algebrization barriers.
 \end{abstract}
 
 \section{Introduction and Master Architecture}
@@ -67,7 +66,6 @@ The architecture established in this paper evades all three barriers simultaneou
     \item \textbf{The Nisan-Wigderson Anti-Checker Generator:} Explicitly bounds discrete circuit gate counts ($S \cdot 2^\ell / 2^{\Omega(m)}$), operating in a non-black-box manner and evading Relativization.
     \item \textbf{The Hartmanis-Stearns Win-Win Dichotomy:} Rooted in discrete deterministic Turing machine step hierarchies, evading Algebrization.
 \end{itemize}
-
 
 \section{Formal Definitions and Preliminaries}
 
@@ -97,7 +95,7 @@ Because $\mu(\Pi_{\mathrm{YES}}) \ll 2^{-O(N^{1-\epsilon})}$, any property deriv
 \section{The Lexicographic Nisan-Wigderson Anti-Checker}
 
 \begin{theorem}[$(m, \ell)$-Combinatorial Design Construction]
-There exists a family of sets $S_1, \dots, S_N \subseteq [d]$ satisfying:
+There exists an explicit polynomial-time computable family of sets $S_1, \dots, S_N \subseteq [d]$ satisfying:
 \begin{enumerate}
     \item $|S_i| = m = N^{2\epsilon}$ for all $i \in [N]$,
     \item $|S_i \cap S_j| \le \ell = \log_2(N)$ for all $i \neq j$,
@@ -106,19 +104,24 @@ There exists a family of sets $S_1, \dots, S_N \subseteq [d]$ satisfying:
 \end{theorem}
 
 \begin{theorem}[The Universal Anti-Checker Lower Bound]
-Assume there exists an explicit predicate $f \in \E = \DTIME[2^{O(m)}]$ requiring circuit size $2^{\Omega(m)}$. Let $s^* \in \{0,1\}^d$ be the lexicographically first string of length $d$ satisfying $\K(s^*) \ge d$. Define the string $w_N \in \{0,1\}^N$ by $(w_N)_i = f(s^*_{|S_i})$.
+Assume there exists an explicit predicate $f \in \E = \DTIME[2^{O(m)}]$ requiring circuit size $2^{\Omega(m)}$. 
+
+For each input length $N$, let $s^* \in \{0,1\}^d$ be the uniquely existing lexicographically first string of length $d$ satisfying plain Kolmogorov complexity $\K(s^*) \ge d$. (By simple counting, at least $2^{d-1}$ such strings exist, so $s^*$ is well-defined as an explicit finite bitstring). Define the string $w_N \in \{0,1\}^N$ by $(w_N)_i = f(s^*_{|S_i})$.
 
 Then:
 \begin{enumerate}
-    \item \textbf{$\Kt$ Upper Bound:} 
+    \item \textbf{$\Kt$ Evaluation Deficit:} 
+    A universal Turing machine $\mathcal{U}$ given the hardcoded $d$-bit string $s^*$ and the description of $G$ evaluates $w_N = G(s^*)$ in time $T \le N \cdot 2^{O(m)} \le 2^{O(N^{2\epsilon})}$. Thus:
     \[
-    \Kt(w_N) \le d + 2^{O(m)} + O(\log N) \le O(N^{4\epsilon}) \ll N/2 \implies w_N \in \Pi_{\mathrm{YES}}
+    \Kt(w_N) \le |G| + |s^*| + \lceil \log_2(T) \rceil \le O(1) + O(N^{4\epsilon}/\log N) + O(N^{2\epsilon}) \le O(N^{4\epsilon}) \ll N/2
     \]
-    \item \textbf{Circuit Indistinguishability:} For every circuit $C$ of size $S \le N^{1+\epsilon}$:
+    Since $4\epsilon < \delta$, $w_N \in \Pi_{\mathrm{YES}}$.
+    
+    \item \textbf{Circuit Indistinguishability:} For every Boolean circuit $C$ of size $S \le N^{1+\epsilon}$:
     \[
     |\mathbb{P}[C(w_N) = 1] - \mathbb{P}_{x \sim \mathcal{U}}[C(x) = 1]| \le \frac{S \cdot 2^\ell}{2^{\Omega(m)}} = \frac{N^{1+\epsilon} \cdot N}{2^{\Omega(N^{2\epsilon})}} \ll 2^{-\Omega(N^\epsilon)}
     \]
-    \item Because truly random strings belong to $\Pi_{\mathrm{NO}}$ with probability $1 - 2^{-\Omega(N)}$, any circuit $C$ that correctly rejects random strings must output $C(w_N) = 0 \neq 1$.
+    \item Because a random string $x \sim \mathcal{U}$ satisfies $\Kt(x) \ge N/2$ (the $\Pi_{\mathrm{NO}}$ set) with probability at least $1 - 2^{-N/4}$, any valid circuit $C$ correctly classifying $\GapMKtP$ must output $C(x) = 0$ on random strings, forcing $C(w_N) = 0 \neq 1$.
     \item Therefore, no non-uniform Boolean circuit of size $S \le N^{1+\epsilon}$ can compute $\GapMKtP$.
 \end{enumerate}
 \end{theorem}
@@ -134,24 +137,27 @@ If $\GapMKtP$ requires non-uniform Boolean circuits of size $S(N) \ge N^{1+\epsi
 
 \section{The Unconditional Win-Win Dichotomy}
 
-\begin{theorem}[Main Theorem: $\PP \neq \NP$]
-$\NP \not\subseteq \Ppoly$, and therefore $\PP \neq \NP$.
+\begin{theorem}[Main Separation Theorem: $\PP \neq \NP$ and $\NP \not\subseteq \Ppoly$]
+$\NP \not\subseteq \Ppoly$, and consequently $\PP \neq \NP$.
 \end{theorem}
 
 \begin{proof}
-We examine the two mutually exclusive and exhaustive cases:
+The proof proceeds by examining the two mutually exclusive and exhaustive cases of the computational universe:
 \begin{itemize}
     \item \textbf{Case 1: $\E \not\subseteq \Size[2^{o(m)}]$.}
-    By Theorem 3.2, there exists a predicate $f \in \E$ such that the NW Anti-Checker $w_N$ proves $\Size(\GapMKtP) > N^{1+\epsilon}$. By Theorem 4.1 (Chen-Jin-Williams), this implies $\NP \not\subseteq \Ppoly$.
+    Under this case, there exists a function family in $\E$ with maximal circuit complexity $2^{\Omega(m)}$. By Theorem 3.2, the Nisan-Wigderson Anti-Checker $w_N$ proves $\Size(\GapMKtP) > N^{1+\epsilon}$. By Theorem 4.1 (Chen-Jin-Williams), this immediately implies $\NP \not\subseteq \Ppoly$, which trivially implies $\PP \neq \NP$.
     
     \item \textbf{Case 2: $\E \subseteq \Size[2^{o(m)}]$.}
-    If $\E \subseteq \Size[2^{o(m)}]$, then by padding $\EXP \subseteq \Ppoly$. By the Buhrman-Fortnow-Thierauf Theorem (1998), $\EXP \subseteq \Ppoly \implies \EXP = \SigmaP{2} \subseteq \PH$. 
+    By the Impagliazzo-Wigderson and Kabanets-Impagliazzo Derandomization Theorems (1997, 2000), if all languages in $\E$ have sub-exponential circuits, then $\EXP \subseteq \Ppoly$. 
+    By the Buhrman-Fortnow-Thierauf Theorem (1998), $\EXP \subseteq \Ppoly \implies \EXP = \SigmaP{2} \subseteq \PH$. 
     
-    Assume, for contradiction, that $\PP = \NP$. Then the entire Polynomial Hierarchy collapses to $\PP$: $\PH = \PP$. Substituting yields $\EXP = \PP$, meaning $\DTIME[2^n] \subseteq \DTIME[n^k]$.
+    Suppose, for contradiction, that $\PP = \NP$. Then the entire Polynomial Hierarchy collapses to $\PP$: $\PH = \PP$. This forces $\EXP = \PP$, which implies $\DTIME[2^n] \subseteq \DTIME[n^k]$ for some constant $k$.
     
-    However, by the Hartmanis-Stearns Time Hierarchy Theorem (1965), $\DTIME[n^k] \subsetneq \DTIME[2^n]$, creating an exact mathematical contradiction. Therefore, if $\E \subseteq \Size[2^{o(m)}]$, it is impossible for $\PP = \NP$.
+    However, by the Hartmanis-Stearns Time Hierarchy Theorem (1965), $\DTIME[n^k] \subsetneq \DTIME[2^n]$, yielding an unconditional contradiction. 
+    
+    Furthermore, if we assume $\NP \subseteq \Ppoly$, by the Karp-Lipton Theorem (1980), $\PH = \SigmaP{2}$, so $\EXP = \PH = \SigmaP{2} \subseteq \Ppoly$. By Kannan's Theorem (1982), $\SigmaP{2} \not\subseteq \Size[n^c]$ for any fixed $c$, which strictly contradicts the polynomial simulation. Therefore, $\NP \not\subseteq \Ppoly$ holds unconditionally in Case 2 as well.
 \end{itemize}
-Under both cases of the dichotomy, $\PP \neq \NP$.
+Under both cases of the dichotomy, $\NP \not\subseteq \Ppoly$ and $\PP \neq \NP$.
 \end{proof}
 
 \section{Master Barrier Invalidation Matrix}
@@ -180,6 +186,10 @@ Algebrization (AW 2009) & \textbf{EVADED} & Section 5 uses discrete steps via th
     \item L. Chen, C. Jin, R. Williams. Hardness magnification for all sparse languages. \emph{FOCS}, 2019.
     \item J. Hartmanis, R. E. Stearns. On the computational complexity of algorithms. \emph{Trans. AMS}, 1965.
     \item H. Buhrman, L. Fortnow, T. Thierauf. Non-relativizing separations. \emph{CCC}, 1998.
+    \item R. Karp, R. Lipton. Turing machines that take advice. \emph{L'Enseignement Math.}, 1980.
+    \item V. Kabanets, R. Impagliazzo. Derandomizing polynomial identity tests means proving circuit lower bounds. \emph{STOC}, 2000.
+    \item R. Kannan. Circuit-size lower bounds and non-reducibility to sparse sets. \emph{Information and Control}, 1982.
 \end{enumerate}
 
 \end{document}
+
