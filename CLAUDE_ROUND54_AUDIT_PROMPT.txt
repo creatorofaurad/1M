@@ -1,0 +1,20 @@
+You are a senior referee for Annals of Mathematics and STOC.
+Conduct an uncompromising, line-by-line mathematical audit of ROUND_54_EXPLICIT_NP_BETTI_SEPARATION.md:
+
+---
+
+### CORE CLAIMS OF ROUND 54:
+1. An explicit language L_Top in NP is constructed whose monochromatic subcube poset order complex Sigma_{L_Top} is homotopy equivalent to a wedge sum of 2^{n/4} spheres of dimension floor(n/2):
+   Sigma_{L_Top} \simeq \bigvee_{j=1}^{2^{n/4}} S^{floor(n/2)}
+2. This forces the middle Betti number over the integers to be exponential:
+   b_{floor(n/2)}(L_Top) = rank(H_{floor(n/2)}(Sigma_{L_Top}; Z)) = 2^{n/4} = 2^{Omega(n)}
+3. For any circuit C_n of size S, the Betti number is upper bounded by b_{floor(n/2)}(C_n) <= 2^{O(S)}.
+4. Therefore, S >= Omega(n).
+
+---
+
+### YOUR REFEREE AUDIT:
+1. Is the upper bound b_{floor(n/2)}(C_n) <= 2^{O(S)} valid for arbitrary general DAG circuits of size S, or can a circuit of size S = poly(n) generate an order complex with Betti number 2^{2^{Omega(n)}} or 2^{poly(S)}?
+2. Does a lower bound of S >= Omega(n) (linear size) for general circuits on n variables suffice to magnify to NP not in P/poly, or does Hardness Magnification require S >= n^{1+eps} for sparse languages?
+3. Check whether L_Top is explicitly in NP (can a nondeterministic Turing machine verify membership in poly(n) time?).
+4. Deliver an unambiguous verdict: [PASS / FAIL WITH PROOF].
