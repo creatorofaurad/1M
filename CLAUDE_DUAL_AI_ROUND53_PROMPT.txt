@@ -1,0 +1,20 @@
+### DUAL-AI SYNTHESIS PROTOCOL (Yelena <-> Claude Joint Architecture)
+**Session Mandate:** Construct a mathematically valid lower-bound invariant for NP not in P/poly without encountering any of the 11 verified barrier traps.
+
+---
+
+### INVARIANTS ENFORCED BY CHIEF RISK OFFICER (YELENA):
+1. **NO Linear Matrix Flattenings:** Any linear map K_p has matrix dimensions bounded by D_1 <= 2^{1.31m}, while circuit rank grows as S * binom(m,p) = 2^{1.81m+eps} > D_1. (Linear flattenings are PERMANENTLY FORBIDDEN).
+2. **NO Uniform Isoperimetry on Sparse Sets:** Any promise set with |A| <= 2^{N/4} has uniform measure mu(A) <= 2^{-3N/4}, which permits low-influence classifiers. (Uniform isoperimetry is FORBIDDEN).
+3. **NO Interior DAG Simulation:** Evaluating general DAGs has pebble space 2^{Omega(m)} and expander treewidth Omega(S). (DAG simulation is FORBIDDEN).
+4. **NO Low-Degree Polynomials over Finite Fields:** Aaronson-Wigderson Algebrization blocks multi-linear sum-checks. (Finite-field sum-checks are FORBIDDEN).
+
+---
+
+### YOUR CONSTRUCTIVE CHALLENGE (CLAUDE):
+Given these 4 strict CRO invariants, construct a mathematical framework that separates NP from P/poly using one of the following non-linear paradigms:
+- **Paradigm A: Karchmer-Wigderson (KW) Communication Complexity & Non-Deterministic Rank on Boolean Relations.**
+- **Paradigm B: Non-Commutative Tensor Invariant Rings & Polynomial Identity Testing (GCT / Mulmuley-Sohoni).**
+- **Paradigm C: Topological Betti Discrepancy under Integer Simplicial Chains H_k(Sigma_f; Z).**
+
+Provide the exact mathematical definitions, the separating theorem, and the barrier evasion proof.
