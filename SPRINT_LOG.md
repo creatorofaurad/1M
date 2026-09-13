@@ -43,7 +43,8 @@
 - **Round 48:** [TALAGRAND ISOPERIMETRIC INFLUENCE PROPOSAL] Proposed hypercube isoperimetric influence lower bound $\mathrm{Inf}(C_N) \ge \Omega(N / \log N)$.
 - **Round 49:** [CLAUDE TERMINAL AUDIT] Local Claude CLI proved the Sparse Measure Counterexample on uniform isoperimetry.
 - **Round 50:** [IMPAGLIAZZO HARD-CORE DENSITY PROPOSAL] Attempted to resolve sparse measure via Impagliazzo's Hard-Core distributions.
-- **Round 51:** [HARD-CORE MIN-ENTROPY BARRIER SEALED] Local Claude CLI terminal audit proved the Min-Entropy Density Contradiction: any distribution with density $\delta \ge 1/2$ has $\mathcal{D}_C(x) \le 2/2^N$, forcing $\mu_{\mathcal{D}_C}(A) \le 2^{-3N/4 + 1} \ll 1/2$. Proves hard-core distributions cannot boost the measure of a sparse set of size $2^{N/4}$ to $1/2$.
+- **Round 51:** [HARD-CORE MIN-ENTROPY BARRIER] Local Claude CLI terminal audit proved the Min-Entropy Density Contradiction.
+- **Round 52:** [CLAUDE "SOLVE" HALLUCINATION AUDIT] When asked to "solve" $P \neq NP$, Claude generated a 200-line paper claiming a solution via Koszul Young Flattenings, but hallucinated the algebraic inequality: comparing $S = N^{1+\epsilon}$ directly against $D_1 = N^{1.31}$ while completely omitting the $\binom{m}{p} = 2^{0.81m}$ multiplier on the circuit rank ($R = 2^{1.81m} > D_1 = 2^{1.31m}$). Demonstrates that un-audited frontier LLMs hallucinate false Millennium proofs.
 - **Silicon Engines:**
   1. `src/knife_edge_falsifier.zig` (N=8 empirical falsification).
   2. `src/dag_congestion_engine_n16.zig` (N=16 65,536 truth tables mapped).

@@ -1,0 +1,20 @@
+You are an elite theoretical computer scientist and mathematician working on the Clay Millennium Prize problem: P versus NP.
+
+We have established a formal repository in C:\Users\srija\Projects\1M containing 51 adversarial rounds mapping the exact boundaries of all 8 known complexity barriers:
+1. Relativization (Baker-Gill-Solovay 1975)
+2. Natural Proofs (Razborov-Rudich 1997)
+3. Algebrization (Aaronson-Wigderson 2009)
+4. Locality Barrier on Hardness Magnification (McKay-Murray-Williams 2019)
+5. Valiant Cut Size Explosion (2^{2^{Omega(m)}})
+6. DAG Pebble & P-Completeness (Omega(S/log S) = 2^{Omega(m)} space)
+7. Expander DAG Treewidth (tw = Omega(S) in Tensor Networks)
+8. Linear Koszul Flattening Ambient Dimension Ceiling (S * binom(m,p) = 2^{1.81m} > 2^{1.31m})
+9. Bent Function Saturation on Static Invariants (Inner product has S = O(log N) but maximal Fourier entropy)
+10. Sparse Measure Barrier on Isoperimetry (mu(A) <= 2^{-3N/4})
+
+---
+
+### YOUR GRAND CHALLENGE:
+Can you construct a complete, rigorous, and barrier-immune mathematical proof that NP is not in P/poly (and therefore P != NP), or rigorously characterize the exact mathematical frontier required to achieve this separation?
+
+Provide an exhaustive, unvarnished mathematical analysis with complete equations, definitions, and theorems.
