@@ -91,6 +91,14 @@ pub fn computeSimplicialTopology(truth_table: u16) SimplicialTopologyResult {
     };
 }
 
+/// Computes the exact Euler-Poincare characteristic chi = V - E
+pub fn computeEulerCharacteristic(truth_table: u16) i32 {
+    const top = computeSimplicialTopology(truth_table);
+    const v: i32 = @as(i32, @intCast(top.num_vertices));
+    const e: i32 = @as(i32, @intCast(top.num_edges));
+    return v - e;
+}
+
 test "Simplicial Homology Topology Test on Simple Gates vs Disconnected Parity" {
     // 1. Single coordinate projection x_0: truth table 0xAAAA (8 vertices, 4-cube face, connected)
     const x0_tt: u16 = 0xAAAA;
@@ -98,6 +106,10 @@ test "Simplicial Homology Topology Test on Simple Gates vs Disconnected Parity" 
     // A single variable is a connected 3-cube face: beta_0 = 1, beta_1 = 5 cycles
     try std.testing.expectEqual(@as(usize, 8), x0_top.num_vertices);
     try std.testing.expectEqual(@as(usize, 1), x0_top.beta_0);
+
+    const x0_chi = computeEulerCharacteristic(x0_tt);
+    // Euler characteristic chi = V - E = 8 - 12 = -4
+    try std.testing.expectEqual(@as(i32, -4), x0_chi);
 
     // 2. Parity function (0x6996): 8 vertices with 0 edges (all mutually at Hamming distance >= 2)
     const parity_tt: u16 = 0x6996;
@@ -107,4 +119,8 @@ test "Simplicial Homology Topology Test on Simple Gates vs Disconnected Parity" 
     try std.testing.expectEqual(@as(usize, 0), parity_top.num_edges);
     try std.testing.expectEqual(@as(usize, 8), parity_top.beta_0);
     try std.testing.expectEqual(@as(usize, 0), parity_top.beta_1);
+
+    const parity_chi = computeEulerCharacteristic(parity_tt);
+    // Incompressible Parity has maximal positive Euler characteristic chi = V - 0 = +8 = N/2
+    try std.testing.expectEqual(@as(i32, 8), parity_chi);
 }
