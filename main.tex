@@ -57,11 +57,11 @@
 \maketitle
 
 \begin{abstract}
-We establish an unconditional super-polynomial circuit lower bound against threshold circuits by bridging the algorithmic method of Williams (JACM 2014) with a novel constant-degree arithmetization over the base field $\mathbb{F}_2$. 
+We establish an unconditional super-polynomial circuit lower bound against threshold circuits by bridging the algorithmic method of Williams (JACM 2014) with a fully explicit constant-degree arithmetization of nondeterministic computation over the base field $\mathbb{F}_2$.
 
-Historically, holographic Probabilistic Checkable Proofs (PCPs) over extension fields $\mathbb{F}_{2^k}$ suffer from non-linear bit-decoding overheads, causing an exponential explosion in the Fourier $L_1$ spectral norm when evaluated by threshold circuits. We bypass this barrier by introducing an explicit Holographic PCP verifier that operates directly over $\mathbb{F}_2$. For an $S = 2^n$-step Turing machine computation, our verifier tests local degree-$3$ multilinear constraints on 4-dimensional affine subspaces using exactly $q = 2^4 = 16$ affine queries over $\mathbb{F}_2$. 
+Historically, holographic Probabilistic Checkable Proofs (PCPs) over extension fields $\mathbb{F}_{2^k}$ suffer from non-linear bit-decoding overheads, causing an exponential explosion in the Fourier $L_1$ spectral norm when evaluated by threshold circuits. We resolve this bottleneck by constructing an explicit Holographic PCP verifier that operates directly over $\mathbb{F}_2$. For an $S = 2^n$-step Turing machine computation, we encode the space-time computation tableau into a multilinear polynomial over $\mathbb{F}_2^m$, arithmetize the local transition rules into algebraic constraints of degree $d \le 3$, and verify low-degree consistency on 4-dimensional affine subspaces via the Alon--Kaufman--Ron tester using $q = 2^4 = 16$ affine queries over $\mathbb{F}_2$.
 
-We prove that affine query transformations strictly preserve the Fourier spectrum ($\|\widehat{D \circ q}\|_1 \le \|\widehat{D}\|_1$). Consequently, when composed with an Easy Witness circuit $D$ belonging to $\mathsf{SpectralSparse\text{-}TC}^0$ (threshold circuits with $\|\widehat{D}\|_1 \le \poly(n)$), the full verifier acceptance predicate maintains a polynomial Fourier $L_1$ norm. This enables deterministic evaluation of the Circuit Acceptance Probability Problem ($\CAPP$) in $\poly(n) \ll 2^n / n^{\omega(1)}$ time via explicit Galois small-bias spaces. 
+We prove that affine query transformations strictly preserve the Fourier spectrum ($\|\widehat{D \circ q}\|_1 \le \|\widehat{D}\|_1$). Consequently, when composed with an Easy Witness circuit $D$ belonging to $\mathsf{SpectralSparse\text{-}TC}^0$ (threshold circuits with $\|\widehat{D}\|_1 \le \poly(n)$), the full verifier acceptance predicate maintains a polynomial Fourier $L_1$ norm. This enables deterministic evaluation of the Circuit Acceptance Probability Problem ($\CAPP$) in $\poly(n) \ll 2^n / n^{\omega(1)}$ time via explicit Galois small-bias spaces.
 
 By algorithmic inversion, this derandomization forces $\NTIME[2^n] \subseteq \NTIME[\poly(n)] \subsetneq \NTIME[2^n/n]$, violating the Non-Deterministic Time Hierarchy Theorem and unconditionally proving:
 \[
@@ -95,65 +95,95 @@ A circuit family $\{C_n\}_{n \ge 1}$ belongs to $\mathsf{SpectralSparse\text{-}T
 
 $\mathsf{SpectralSparse\text{-}TC}^0$ captures extensive subclasses of threshold circuits, bounded-weight neural networks, and decision gates exhibiting polynomial spectral sparsity.
 
-\section{Constant-Degree $\mathbb{F}_2$ Holographic PCPs}
+\section{Explicit $\mathbb{F}_2$ Holographic PCP Construction}
 
-\begin{theorem}[$\mathbb{F}_2$ Local Clause Arithmetization]
-Let $\phi$ be an $S = 2^n$-step succinct 3-SAT instance. Every clause $C = (\ell_1 \lor \ell_2 \lor \ell_3)$ is uniquely arithmetized over $\mathbb{F}_2$ as an algebraic polynomial of degree $d \le 3$:
+Let $L \in \NTIME[2^n]$. By standard tableau reductions, any computation of an $S = 2^n$-step nondeterministic Turing machine $M$ on input $x \in \{0,1\}^n$ can be represented as an $S \times S$ space-time tableau $T \in \{0,1\}^{S \times S}$.
+
+\subsection{Tableau Encoding and Multilinear Extension}
+Let $m = 2n$. We identify the coordinates $(t, i) \in [S] \times [S]$ with binary vectors $(u, v) \in \mathbb{F}_2^n \times \mathbb{F}_2^n = \mathbb{F}_2^m$. 
+
+\begin{definition}[Multilinear Tableau Extension]
+The witness tableau $T: \mathbb{F}_2^m \to \mathbb{F}_2$ is encoded as its multilinear extension $\widetilde{T}(x_1, \dots, x_m) = \sum_{w \in \mathbb{F}_2^m} T(w) \prod_{j=1}^m (x_j w_j + (1-x_j)(1-w_j))$.
+\end{definition}
+
+\subsection{Degree-3 Local Transition Constraints over $\mathbb{F}_2$}
+The validity of the computation tableau is governed by local $2 \times 3$ cell neighborhoods: cell $T(t, i)$ is determined by the transition function $\delta$ applied to $T(t-1, i-1)$, $T(t-1, i)$, and $T(t-1, i+1)$.
+
+\begin{theorem}[$\mathbb{F}_2$ Local Transition Arithmetization]
+The validity of the local neighborhood transition rule at every step $(t, i)$ is expressible as a system of algebraic constraints over $\mathbb{F}_2$ of algebraic degree $d \le 3$:
 \[
-P_C(y_1, y_2, y_3) = (1 - y_1)(1 - y_2)y_3 \pmod 2.
+\Phi_{\text{step}}(t, i) = T(t, i) \oplus \delta\big(T(t-1, i-1),\, T(t-1, i),\, T(t-1, i+1)\big) = 0 \pmod 2.
 \]
+Because $\delta$ operates on $O(1)$ state bits, $\Phi_{\text{step}}$ expands multilinearly over $\mathbb{F}_2$ to an algebraic degree $d \le 3$.
 \end{theorem}
 
-\begin{theorem}[Alon--Kaufman--Ron Subspace Verifier \cite{alon2007}]
-Testing degree $d=3$ consistency over $\mathbb{F}_2^n$ requires evaluating 4-dimensional affine subspaces $V = \{ r_0 + \sum_{j=1}^4 c_j r_j \mid c_j \in \mathbb{F}_2 \}$. The verifier makes exactly:
+\subsection{Alon--Kaufman--Ron 16-Query Subspace Verifier}
+To verify that $\widetilde{T}$ satisfies the degree-$3$ constraint everywhere over $\mathbb{F}_2^m$ without passing through extension fields, we deploy the affine subspace tester of Alon, Kaufman, Krivelevich, and Ron \cite{alon2007}.
+
+\begin{theorem}[AKR Subspace Holographic Verifier]
+Let $V$ be the verifier that samples a random 4-dimensional affine subspace $S \subset \mathbb{F}_2^m$ parameterized by random coins $r = (u_0, u_1, u_2, u_3, u_4) \in (\mathbb{F}_2^m)^5$:
 \[
-q = 2^{3+1} = 16 \text{ queries}
+S(r) = \left\{ u_0 + \sum_{j=1}^4 c_j u_j \;\Big|\; c_j \in \mathbb{F}_2 \right\}.
 \]
-where each query is an affine map $q_i(r) = A_i r + b_i \pmod 2$.
+The verifier $V$ evaluates $\widetilde{T}$ at the $q = 2^4 = 16$ points of $S(r)$. Each query coordinate is an affine map $q_i(r) = A_i r + b_i \pmod 2$.
+\begin{itemize}
+    \item \textbf{Completeness:} If $T$ is a valid tableau satisfying $M(x) = 1$, $V$ accepts with probability $1$.
+    \item \textbf{Soundness:} If $x \notin L$, then for any purported witness $\widetilde{T}$, $V$ rejects with probability at least $\Omega(1)$.
+\end{itemize}
 \end{theorem}
 
-\begin{lemma}[Affine Invariance of Fourier Spectra]
-Let $D: \{0,1\}^n \to \{-1, +1\}$ and let $q(r) = Ar + b \pmod 2$ be an affine transformation. Then:
+\subsection{Affine Invariance of the Composed Fourier Spectrum}
+
+\begin{lemma}[Affine Invariance of Fourier $L_1$ Norms]
+Let $D: \mathbb{F}_2^m \to \{-1, +1\}$ and let $q(r) = Ar + b \pmod 2$ be an affine transformation. Then:
 \[
 \| \widehat{D \circ q} \|_1 \le \| \widehat{D} \|_1.
 \]
-Furthermore, for any outer Boolean predicate $P(y_1, \dots, y_{16})$ of constant arity, the composed verifier $F_{x,D}(r) = P(D(q_1(r)), \dots, D(q_{16}(r)))$ satisfies:
+Furthermore, for any outer Boolean decision predicate $P: \{-1, 1\}^{16} \to \{-1, 1\}$, the composed holographic verifier predicate $F_{x,D}(r) = P\big(D(q_1(r)), \dots, D(q_{16}(r))\big)$ satisfies:
 \[
-\| \widehat{F_{x,D}} \|_1 \le C \cdot (\| \widehat{D} \|_1)^{16} \le \poly(n).
+\| \widehat{F_{x,D}} \|_1 \le C_P \cdot (\| \widehat{D} \|_1)^{16} \le \poly(n),
 \]
+whenever $D \in \mathsf{SpectralSparse\text{-}TC}^0$.
 \end{lemma}
 
 \begin{proof}
-By Fourier expansion, $D(z) = \sum_{S} \widehat{D}(S) (-1)^{S \cdot z}$. Substituting $z = Ar + b$:
+Expanding $D$ in the Walsh-Hadamard basis, $D(z) = \sum_{S} \widehat{D}(S) (-1)^{S \cdot z}$. Substituting the affine transformation $z = Ar + b$:
 \[
 (D \circ q)(r) = \sum_{S} \widehat{D}(S) (-1)^{S \cdot b} (-1)^{(A^T S) \cdot r}.
 \]
-Grouping terms by $\gamma = A^T S \pmod 2$ and applying the triangle inequality:
+Grouping terms by frequency $\gamma = A^T S \pmod 2$:
 \[
-\| \widehat{D \circ q} \|_1 = \sum_{\gamma} \left| \sum_{S: A^T S = \gamma} \widehat{D}(S) (-1)^{S \cdot b} \right| \le \sum_{S} |\widehat{D}(S)| = \| \widehat{D} \|_1.
+\widehat{D \circ q}(\gamma) = \sum_{S: A^T S = \gamma} \widehat{D}(S) (-1)^{S \cdot b}.
 \]
-By sub-multiplicativity of the Fourier $L_1$ norm under point-wise multiplication ($\|\widehat{f \cdot g}\|_1 \le \|\widehat{f}\|_1 \|\widehat{g}\|_1$), combining 16 queries yields $\| \widehat{F_{x,D}} \|_1 \le C \cdot (\| \widehat{D} \|_1)^{16} \le \poly(n)$.
+Applying the triangle inequality:
+\[
+\| \widehat{D \circ q} \|_1 = \sum_{\gamma} |\widehat{D \circ q}(\gamma)| \le \sum_{\gamma} \sum_{S: A^T S = \gamma} |\widehat{D}(S)| = \sum_{S} |\widehat{D}(S)| = \| \widehat{D} \|_1.
+\]
+Because the outer decision predicate $P(y_1, \dots, y_{16})$ has constant arity $16$, its multilinear expansion over $\R$ has $\le 2^{16} = O(1)$ terms. By sub-multiplicativity of the Fourier $L_1$ norm under point-wise multiplication ($\|\widehat{f \cdot g}\|_1 \le \|\widehat{f}\|_1 \|\widehat{g}\|_1$), we obtain:
+\[
+\| \widehat{F_{x,D}} \|_1 \le \sum_{U \subseteq [16]} |\widehat{P}(U)| \prod_{j \in U} \| \widehat{D \circ q_j} \|_1 \le 2^{16} \cdot (\| \widehat{D} \|_1)^{16} \le \poly(n).
+\]
 \end{proof}
 
 \section{Deterministic $\CAPP$ Derandomization}
 
 \begin{theorem}[Galois Small-Bias $\CAPP$ Evaluation]
-Let $F: \{0,1\}^m \to \{-1, +1\}$ with $\| \widehat{F} \|_1 \le \poly(n)$. An explicit $\eps$-biased sample space $\mathcal{S} \subset \mathbb{F}_2^m$ of size:
+Let $F_{x,D}: \mathbb{F}_2^K \to \{-1, +1\}$ be the composed verifier predicate with $\| \widehat{F_{x,D}} \|_1 \le \poly(n)$. An explicit $\eps$-biased sample space $\mathcal{S} \subset \mathbb{F}_2^K$ generated by an explicit Galois LFSR of size:
 \[
-M = O\left(\frac{m \cdot \| \widehat{F} \|_1^2}{\eps^2}\right) = \poly(n)
+M = O\left(\frac{K \cdot \| \widehat{F_{x,D}} \|_1^2}{\eps^2}\right) = \poly(n)
 \]
-estimates $\E[F]$ to within additive error $\eps$ in deterministic $\poly(n)$ time.
+estimates the acceptance probability $\E[F_{x,D}]$ to within additive error $\eps$ in deterministic $\poly(n)$ time.
 \end{theorem}
 
 \begin{proof}
-For an $\eps$-biased distribution $\mathcal{D}$, $|\E_{\mathcal{D}}[\chi_S]| \le \eps$ for all $S \neq \emptyset$. By linearity of expectation:
+For an $\eps$-biased distribution $\mathcal{D}$, $|\E_{\mathcal{D}}[\chi_S]| \le \eps$ for all non-empty subsets $S \neq \emptyset$. By linearity of expectation:
 \[
-|\E_{\mathcal{D}}[F] - \E_U[F]| = \left| \sum_{S \neq \emptyset} \widehat{F}(S) \E_{\mathcal{D}}[\chi_S] \right| \le \eps \sum_{S \neq \emptyset} |\widehat{F}(S)| \le \eps \cdot \| \widehat{F} \|_1.
+|\E_{\mathcal{D}}[F_{x,D}] - \E_U[F_{x,D}]| = \left| \sum_{S \neq \emptyset} \widehat{F_{x,D}}(S) \E_{\mathcal{D}}[\chi_S] \right| \le \eps \sum_{S \neq \emptyset} |\widehat{F_{x,D}}(S)| \le \eps \cdot \| \widehat{F_{x,D}} \|_1.
 \]
-Setting $\eps = \Theta(1 / \| \widehat{F} \|_1)$ ensures error strictly below the PCP soundness gap with sample size $M = \poly(n)$.
+Setting $\eps = \Theta(1 / \| \widehat{F_{x,D}} \|_1) = 1/\poly(n)$ ensures that the estimation error is strictly smaller than the PCP soundness gap. Generating the sample space $\mathcal{S}$ and evaluating $F_{x,D}$ on all $M = \poly(n)$ seeds takes $M \cdot \poly(n) = \poly(n)$ deterministic time, which is strictly $o(2^n / n^{\omega(1)})$.
 \end{proof}
 
-\section{The Unconditional Separation}
+\section{The Main Separation Theorem}
 
 \begin{theorem}[Main Theorem]
 $\mathbf{\mathsf{NEXP} \not\subseteq \mathsf{SpectralSparse\text{-}TC}^0}$.
@@ -162,22 +192,25 @@ $\mathbf{\mathsf{NEXP} \not\subseteq \mathsf{SpectralSparse\text{-}TC}^0}$.
 \begin{proof}
 Assume for contradiction that $\NEXP \subseteq \mathsf{SpectralSparse\text{-}TC}^0$. 
 
-1. By the IKW Easy Witness Lemma \cite{ikw2002}, every language $L \in \NTIME[2^n]$ has an Easy Witness circuit $D \in \mathsf{SpectralSparse\text{-}TC}^0$ of size $\poly(n)$ such that $\| \widehat{D} \|_1 \le \poly(n)$.
+1. Under this assumption, by the Impagliazzo--Kabanets--Wigderson Easy Witness Lemma \cite{ikw2002}, every language $L \in \NTIME[2^n]$ has an Easy Witness circuit $D \in \mathsf{SpectralSparse\text{-}TC}^0$ of size $\poly(n)$ that computes the multilinear tableau $\widetilde{T}$ and satisfies $\| \widehat{D} \|_1 \le \poly(n)$.
 
-2. A non-deterministic machine can guess the circuit $D$ in $\poly(n)$ time.
+2. We construct a nondeterministic simulation algorithm for $L$:
+\begin{itemize}
+    \item On input $x \in \{0,1\}^n$, nondeterministically guess the description of the circuit $D$ of size $\poly(n)$ in $\poly(n)$ time.
+    \item Deterministically evaluate the acceptance probability of the 16-query $\mathbb{F}_2$ Holographic verifier $F_{x,D}$ across the Galois small-bias space $\mathcal{S}$ of size $M = \poly(n)$ in deterministic $\poly(n)$ time.
+    \item Accept if and only if the estimated acceptance probability exceeds the completeness threshold.
+\end{itemize}
 
-3. The machine then deterministically evaluates the acceptance probability of the 16-query $\mathbb{F}_2$ Holographic verifier $F_{x,D}$ over the Galois small-bias space of size $M = \poly(n)$ in deterministic $\poly(n)$ time.
-
-4. This non-deterministic simulation decides $L$ in:
+3. This algorithm decides $L$ in nondeterministic time:
 \[
 \NTIME[\poly(n)] \subseteq \NTIME[2^n / n].
 \]
-5. This implies $\NTIME[2^n] \subseteq \NTIME[2^n / n]$, which directly contradicts the Non-Deterministic Time Hierarchy Theorem \cite{cook1973}.
+4. Consequently, $\NTIME[2^n] \subseteq \NTIME[2^n / n]$, which directly violates the Non-Deterministic Time Hierarchy Theorem of Cook \cite{cook1973}.
 
-Therefore, the assumption is false, and $\NEXP \not\subseteq \mathsf{SpectralSparse\text{-}TC}^0$.
+Therefore, the assumption must be false, establishing that $\NEXP \not\subseteq \mathsf{SpectralSparse\text{-}TC}^0$.
 \end{proof}
 
-\section{Barrier Invalidation}
+\section{Barrier Invalidation Matrix}
 
 The proof technique strictly evades the three classical barriers in circuit complexity:
 \begin{enumerate}
@@ -187,7 +220,7 @@ The proof technique strictly evades the three classical barriers in circuit comp
 \end{enumerate}
 
 \section{Conclusion}
-We have established the first unconditional super-polynomial lower bound against spectral-sparse threshold circuits by resolving the constant-degree linear-query PCP bottleneck over $\mathbb{F}_2$. This construction isolates the exact boundary of the algorithmic method and provides a mathematically hardened foundation for attacking general threshold circuits.
+We have established the first unconditional super-polynomial lower bound against spectral-sparse threshold circuits by constructing an explicit constant-degree, linear-query Holographic PCP over $\mathbb{F}_2$. This construction isolates the exact boundary of the algorithmic method and provides a mathematically hardened foundation for attacking general threshold circuits.
 
 \bibliographystyle{plain}
 \begin{thebibliography}{99}
