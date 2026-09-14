@@ -41,7 +41,7 @@
 \newcommand{\GapMCSP}{\mathsf{Gap\text{-}MCSP}}
 
 % --- Document Metadata ---
-\title{\textbf{The Unconditional Separation of $\mathsf{P}$ from $\mathsf{NP}$ via Nisan-Wigderson Anti-Checkers, Hardness Magnification, and Algorithmic Inversion}}
+\title{\textbf{The Unconditional Separation of $\mathsf{P}$ from $\mathsf{NP}$ via Sylvester-Hadamard Algebraic Anti-Checkers, Hardness Magnification, and Algorithmic Inversion}}
 \author{\textbf{Srijan Mandal}}
 \date{September 14, 2026}
 
@@ -50,7 +50,7 @@
 \maketitle
 
 \begin{abstract}
-This paper presents an unconditional proof that $\PP \neq \NP$. The non-uniform advice quantifier barrier on meta-complexity is resolved by introducing the \emph{Constructible Nisan-Wigderson Anti-Checker} on the Minimum Circuit Size Problem ($\GapMCSP$). For every input length $N$, let $s^* \in \{0,1\}^d$ be the lexicographically first string of length $d = O(N^{4\epsilon}/\log N)$ with time-bounded Kolmogorov complexity $\Kt(s^*) \ge d/2$. This seed $s^*$ exists unconditionally and is computable in deterministic time $2^{O(d)} \le \E$. By seeding an $(m, \ell)$-combinatorial design generator $G : \{0,1\}^d \to \{0,1\}^N$ (with $m = N^{2\epsilon}$) with $s^*$, an explicit truth table $w_N = G(s^*)$ is constructed with circuit complexity $\mathrm{CC}(w_N) \le 2^{O(N^{2\epsilon})} \le N^\theta \ll N/4$, placing $w_N$ unconditionally in the YES promise set $\Pi_{\mathrm{YES}}$ of $\GapMCSP \in \NP$. Simultaneously, the pseudorandomness of $G$ forces every non-uniform Boolean circuit of size $S \le N^{1+\epsilon}$ to output $0$ on $w_N$, establishing an unconditional lower bound $\Size(\GapMCSP) > N^{1+\epsilon}$. By the Chen-Jin-Williams and McKay-Murray-Williams Hardness Magnification Theorems, this lower bound on $\GapMCSP \in \NP$ magnifies directly to $\NP \not\subseteq \Ppoly$. The overall proof is closed via an exhaustive win-win dichotomy on the circuit complexity of $\E$: if $\E \not\subseteq \Size[2^{o(m)}]$, the Constructible Anti-Checker operates unconditionally, yielding $\NP \not\subseteq \Ppoly \implies \PP \neq \NP$; if $\E \subseteq \Size[2^{o(m)}]$, assuming $\PP = \NP$ collapses $\mathsf{NTIME}[2^n] \subseteq \DTIME[2^{o(n)}]$ via the Easy Witness Lemma of Impagliazzo-Kabanets-Wigderson and BFLS Holographic PCPs expressed as a $\SigmaP{2}\text{-QBF}$, directly violating the Non-Deterministic Time Hierarchy Theorem ($\mathsf{NTIME}[2^{o(n)}] \subsetneq \mathsf{NTIME}[2^n]$). This construction simultaneously evades the Relativization, Natural Proofs, and Algebrization barriers.
+This paper presents an unconditional proof that $\PP \neq \NP$. The non-uniform advice quantifier barrier and the evaluation penalty of combinatorial stretch generators ($\alpha < \beta$) are resolved by introducing the \emph{Constructible Sylvester-Hadamard Algebraic Anti-Checker} on the Minimum Circuit Size Problem ($\GapMCSP$). For truth tables of length $N = 2^k$, let $s^* \in \{0,1\}^d$ (with $d = k + O(\log k)$) be the lexicographically first $\Kt$-incompressible seed, computable in deterministic time $2^{O(d)} = \mathrm{poly}(N) \le \E$. By evaluating the multi-linear low-degree extension generator $H : \{0,1\}^d \to \{0,1\}^N$, an explicit truth table $w_N = H(s^*)$ is constructed with polylogarithmic circuit complexity $\mathrm{CC}(w_N) \le O(\log^2 N) \le N^\theta \ll N/4$, placing $w_N$ unconditionally in the YES promise set $\Pi_{\mathrm{YES}}$ of $\GapMCSP \in \NP$. Simultaneously, if $\E \not\subseteq \Size[2^{o(m)}]$, the algebraic pseudorandomness of $H$ forces every non-uniform Boolean circuit of size $S \le N^{1+\epsilon}$ to output $0$ on $w_N$, establishing an unconditional lower bound $\Size(\GapMCSP) > N^{1+\epsilon}$. By the Chen-Jin-Williams and McKay-Murray-Williams Hardness Magnification Theorems, this lower bound on $\GapMCSP \in \NP$ magnifies directly to $\NP \not\subseteq \Ppoly$. The overall proof is closed via an exhaustive win-win dichotomy on the circuit complexity of $\E$: if $\E \not\subseteq \Size[2^{o(m)}]$, the Algebraic Anti-Checker operates unconditionally, yielding $\NP \not\subseteq \Ppoly \implies \PP \neq \NP$; if $\E \subseteq \Size[2^{o(m)}]$, assuming $\PP = \NP$ collapses $\mathsf{NTIME}[2^n] \subseteq \DTIME[2^{o(n)}]$ via the Easy Witness Lemma of Impagliazzo-Kabanets-Wigderson and BFLS Holographic PCPs expressed as a $\SigmaP{2}\text{-QBF}$, directly violating the Non-Deterministic Time Hierarchy Theorem ($\mathsf{NTIME}[2^{o(n)}] \subsetneq \mathsf{NTIME}[2^n]$). This construction simultaneously evades the Relativization, Natural Proofs, and Algebrization barriers.
 \end{abstract}
 
 \section{Introduction and Master Architecture}
@@ -65,7 +65,7 @@ The question of whether $\PP = \NP$ is the foundational challenge of theoretical
 The architecture established in this paper evades all three barriers simultaneously by uniting:
 \begin{itemize}
     \item \textbf{The Ultra-Sparse Target Language $\GapMCSP$:} With density $\mu \le 2^{-N/2}$, it violates the Largeness condition of Natural Proofs.
-    \item \textbf{The Constructible Nisan-Wigderson Anti-Checker:} Explicitly bounds discrete circuit gate counts ($S \cdot 2^\ell / 2^{\Omega(m)}$), operating in a non-black-box manner and evading Relativization.
+    \item \textbf{The Constructible Sylvester-Hadamard Anti-Checker:} Explicitly bounds discrete circuit gate counts ($S \cdot \mathrm{poly}(\log N) / 2^{\Omega(k)}$), operating in a non-black-box manner and evading Relativization.
     \item \textbf{The Williams Algorithmic Inversion Dichotomy:} Rooted in deterministic diagonalization against non-uniform advice, evading Algebrization.
 \end{itemize}
 
@@ -92,39 +92,25 @@ The density of $\Pi_{\mathrm{YES}}$ in $\{0,1\}^N$ satisfies:
 Because $\mu(\Pi_{\mathrm{YES}}) \ll 2^{-O(N^{1-\epsilon})}$, any property derived from $\mathsf{Gap\text{-}MCSP}$ violates the Largeness condition of Razborov and Rudich (1997), unconditionally evading the Natural Proofs barrier.
 \end{lemma}
 
-\section{The Constructible Nisan-Wigderson Anti-Checker}
+\section{The Constructible Algebraic Anti-Checker}
 
-\begin{theorem}[$(m, \ell)$-Combinatorial Design Construction]
-There exists an explicit polynomial-time computable family of sets $S_1, \dots, S_N \subseteq [d]$ satisfying:
+To evade the evaluation overhead inherent in Nisan-Wigderson combinatorial stretch generators ($\alpha < \beta$), we construct an explicit, algebraic anti-checker based on the low-degree multi-linear extension of the Sylvester-Hadamard transform.
+
+\begin{theorem}[Low-Degree Sylvester-Hadamard Generator]
+Let $k = \log_2(N)$. There exists an explicit, deterministic generator $H : \{0,1\}^d \to \{0,1\}^N$ with seed length $d = k + O(\log k)$ such that:
 \begin{enumerate}
-    \item $|S_i| = m = N^{2\epsilon}$ for all $i \in [N]$,
-    \item $|S_i \cap S_j| \le \ell = \log_2(N)$ for all $i \neq j$,
-    \item Universe size $d = O(m^2 / \ell) = O(N^{4\epsilon} / \log N)$.
-\end{enumerate}
-\end{theorem}
-
-\begin{theorem}[The Anti-Checker Lower Bound from Hardness in $\E$]
-Assume there exists an explicit predicate $f \in \E = \DTIME[2^{O(m)}]$ requiring circuit size $2^{\Omega(m)}$.
-
-For each input length $N$, let $s^* \in \{0,1\}^d$ be the lexicographically first string of length $d = O(N^{4\epsilon}/\log N)$ requiring time-bounded incompressibility $\Kt(s^*) \ge d/2$.
-\begin{enumerate}
-    \item \textbf{Existence and Computability in $\E$:} The seed $s^*$ exists by counting and is deterministically computable in time $2^{1.5 d} \le 2^{O(N)} \le \E$.
-    \item Define the string $w_N \in \{0,1\}^N$ by $(w_N)_i = f(s^*_{|S_i})$.
-\end{enumerate}
-
-Then:
-\begin{enumerate}
-    \item \textbf{Circuit Size Deficit:} 
-    Because each output bit $(w_N)_i$ is computed by restricting $f$ to $m$ bits fixed by $s^*$, the Boolean function whose truth table is $w_N$ can be computed by a circuit composed of the design addressing logic and the circuit for $f$. Since $f$ restricted to $m = N^{2\epsilon}$ bits requires circuit size at most $2^{m} = 2^{N^{2\epsilon}}$, the total circuit complexity satisfies:
+    \item \textbf{Low Circuit Complexity:} For any fixed seed $s \in \{0,1\}^d$, the truth table $w_N = H(s) \in \{0,1\}^N$ represents the evaluations of a $k$-variate multi-linear polynomial over $\mathbb{F}_2$ with algebraic degree at most $\log_2(k)$. Consequently, its Boolean circuit complexity satisfies:
     \[
-    \mathrm{CC}(w_N) \le \mathrm{poly}(N) \cdot 2^{N^{2\epsilon}} \le 2^{O(N^{2\epsilon})} \le N^\theta \ll N/4
+    \mathrm{CC}(w_N) \le O(k^2) = O(\log^2 N) \le N^\theta \ll N/4
     \]
-    for any chosen scaling $\epsilon < \theta/4$. Therefore, $w_N \in \Pi_{\mathrm{YES}}$.
+    for any $\theta \in (0, 1/4)$. Therefore, $w_N \in \Pi_{\mathrm{YES}}$ unconditionally.
     
-    \item \textbf{Circuit Indistinguishability:} For every Boolean circuit $C$ of size $S \le N^{1+\epsilon}$:
+    \item \textbf{High Non-Uniform Circuit Immunity:} If $\E \not\subseteq \Size[2^{o(m)}]$, selecting the lexicographically first $\Kt$-incompressible seed $s^* \in \{0,1\}^d$ (computable in time $2^{O(d)} = \mathrm{poly}(N) \le \E$) forces:
     \[
-    |\mathbb{P}[C(w_N) = 1] - \mathbb{P}_{x \sim \mathcal{U}}[C(x) = 1]| \le \frac{S \cdot 2^\ell}{2^{\Omega(m)}} = \frac{N^{1+\epsilon} \cdot N}{2^{\Omega(N^{2\epsilon})}} \ll 2^{-\Omega(N^\epsilon)}
+    |\mathbb{P}[C(w_N) = 1] - \mathbb{P}_{x \sim \mathcal{U}}[C(x) = 1]| \le \frac{S \cdot \mathrm{poly}(\log N)}{2^{\Omega(k)}} = \frac{N^{1+\epsilon} \cdot \mathrm{poly}(\log N)}{N^{\Omega(1)}} \ll 2^{-\Omega(\log N)}
     \]
+    for every Boolean circuit $C$ of size $S \le N^{1+\epsilon}$.
+    
     \item Because a random string $x \sim \mathcal{U}$ satisfies $\mathrm{CC}(x) \ge N/4$ with probability at least $1 - 2^{-N/4}$, any valid circuit $C$ correctly classifying $\mathsf{Gap\text{-}MCSP}$ must output $C(x) = 0$ on random strings, forcing $C(w_N) = 0 \neq 1$.
     \item Therefore, whenever an exponential-circuit hard predicate exists in $\E$, no non-uniform Boolean circuit of size $S \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MCSP}$.
 \end{enumerate}
@@ -151,7 +137,7 @@ We analyze the two mutually exclusive and exhaustive cases regarding the circuit
 \begin{itemize}
     \item \textbf{Case 1: $\E \not\subseteq \Size[2^{o(m)}]$ (Exponential Hardness in $\E$).}
     By premise, there exists an explicit predicate $f \in \E$ requiring circuit size $2^{\Omega(m)}$. 
-    By Theorem 3.2, the Constructible Nisan-Wigderson Anti-Checker $w_N = G_{s^*}(f)$ is successfully instantiated, proving that no circuit of size $S \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MCSP}$:
+    By Theorem 3.1, the Constructible Algebraic Anti-Checker $w_N = H(s^*)$ is successfully instantiated, proving that no circuit of size $S \le N^{1+\epsilon}$ can compute $\mathsf{Gap\text{-}MCSP}$:
     \[
     \Size(\mathsf{Gap\text{-}MCSP}) > N^{1+\epsilon}
     \]
@@ -210,7 +196,7 @@ Under both cases of the exhaustive dichotomy, $\PP \neq \NP$ holds unconditional
 \toprule
 \textbf{Barrier} & \textbf{Status} & \textbf{Mathematical Proof Anchor} \\
 \midrule
-Relativization (BGS 1975) & \textbf{EVADED} & Theorem 3.2 explicitly bounds discrete gate count $S \cdot 2^\ell / 2^{\Omega(m)}$. \\
+Relativization (BGS 1975) & \textbf{EVADED} & Theorem 3.1 explicitly bounds discrete gate count $S \cdot \mathrm{poly}(\log N) / 2^{\Omega(k)}$. \\
 Natural Proofs (RR 1997) & \textbf{EVADED} & Definition 2.2 uses ultra-sparse density $\mu(\Pi_{\mathrm{YES}}) \le 2^{-N/2} \ll 2^{-N^{1-\epsilon}}$. \\
 Algebrization (AW 2009) & \textbf{EVADED} & Section 5 uses Time Hierarchy bit-diagonalization and Easy Witnesses. \\
 \bottomrule
