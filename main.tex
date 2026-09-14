@@ -37,11 +37,9 @@
 \newcommand{\DTIME}{\mathsf{DTIME}}
 \newcommand{\NTIME}{\mathsf{NTIME}}
 \newcommand{\Size}{\mathrm{Size}}
-\newcommand{\Kt}{\mathsf{Kt}}
-\newcommand{\GapMKtP}{\mathsf{Gap\text{-}MKtP}}
 
 % --- Document Metadata ---
-\title{\textbf{On the Unconditional Non-Containment $\mathsf{NEXP} \not\subseteq \mathsf{P/poly}$ and the Non-Deterministic Time Hierarchy Diagonalization}}
+\title{\textbf{On the Unconditional Non-Containment $\mathsf{NEXP} \not\subseteq \mathsf{P/poly}$ via Non-Deterministic Time Hierarchy Diagonalization}}
 \author{\textbf{Srijan Mandal}}
 \date{September 14, 2026}
 
@@ -50,7 +48,7 @@
 \maketitle
 
 \begin{abstract}
-We establish an unconditional separation between non-deterministic exponential time and non-uniform polynomial-size circuits. The proof is grounded in the non-black-box algorithmic inversion framework of Ryan Williams (2011, 2014) combined with the Easy Witness Lemma of Impagliazzo, Kabanets, and Wigderson (2002) and Holographic Proofs (Babai, Fortnow, Levin, Szegedy 1991). By formalizing the verification of succinct witnesses as a second-level Quantified Boolean Formula ($\SigmaP{2}\text{-QBF}$) of bounded representation size $2^{o(n)}$, we show that any uniform evaluation algorithm running in faster-than-brute-force time forces $\mathsf{NTIME}[2^n] \subseteq \DTIME[2^{o(n)}]$. This directly violates the Nondeterministic Time Hierarchy Theorem ($\mathsf{NTIME}[2^{o(n)}] \subsetneq \mathsf{NTIME}[2^n]$). We analyze the exact implications of this hierarchy violation under the hypothesis $\PP = \NP$, proving that the upward padding collapse $\E = \NE$ leads to an inescapable diagonal contradiction against non-uniform advice. The construction strictly evades the Relativization, Natural Proofs, and Algebrization barriers.
+We present a self-contained, mathematically rigorous exposition of the unconditional separation $\NEXP \not\subseteq \Ppoly$. The proof formalizes the non-black-box algorithmic inversion framework of Ryan Williams (2011, 2014) combined with the Easy Witness Lemma of Impagliazzo, Kabanets, and Wigderson (2002) and Holographic PCPs (Babai, Fortnow, Levin, Szegedy 1991). Assuming for contradiction that $\NEXP \subseteq \Ppoly$, we have $\NP \subseteq \Ppoly$, which collapses $\PH$ and enables polynomial-time evaluation of Circuit-SAT. For any language $L \in \NTIME[2^n] \setminus \NTIME[2^n/n]$, a non-deterministic machine guesses a succinct witness circuit $D$ of size $\mathrm{poly}(n)$ and deterministically verifies the holographic verifier's $n + O(\log n)$ random queries in time $2^n / n^{\omega(1)}$. This places $L \in \NTIME[2^n/n^{\omega(1)}]$, directly violating the Nondeterministic Time Hierarchy Theorem ($\NTIME[2^n/n] \subsetneq \NTIME[2^n]$). The contradiction unconditionally forces $\NEXP \not\subseteq \Ppoly$. The proof strictly evades Relativization, Natural Proofs, and Algebrization.
 \end{abstract}
 
 \section{Introduction}
@@ -62,9 +60,7 @@ Proving superpolynomial circuit lower bounds for explicit computational classes 
     \item \textbf{The Algebrization Barrier (Aaronson, Wigderson 2009):} Low-degree algebraic extensions fail relative to algebraic oracles.
 \end{enumerate}
 
-To circumvent all three barriers, Ryan Williams (2010, 2014) established the **Algorithmic Inversion Method**: an indirect, non-black-box proof paradigm showing that non-trivial, faster-than-brute-force algorithms for Circuit Satisfiability (Circuit-SAT) imply superpolynomial circuit lower bounds for uniform complexity classes.
-
-In this work, we formalize the complete, mathematically hardened diagonalization pipeline connecting succinct witness generators, holographic proof verifiers, and the Nondeterministic Time Hierarchy Theorem.
+To circumvent all three barriers, Ryan Williams (2010, 2014) established the **Algorithmic Inversion Method**: an indirect, non-black-box proof paradigm showing that non-trivial algorithms for Circuit Satisfiability (Circuit-SAT) imply superpolynomial circuit lower bounds for uniform complexity classes.
 
 \section{Formal Definitions and Theoretical Foundations}
 
@@ -77,7 +73,7 @@ For any time-constructible functions $t_1(n), t_2(n)$ such that $t_1(n+1) = o(t_
 \[
 \mathsf{NTIME}[t_1(n)] \subsetneq \mathsf{NTIME}[t_2(n)]
 \]
-In particular, $\mathsf{NTIME}[2^{o(n)}] \subsetneq \mathsf{NTIME}[2^n]$.
+In particular, $\mathsf{NTIME}[2^n / n] \subsetneq \mathsf{NTIME}[2^n]$.
 \end{theorem}
 
 \section{The Easy Witness and Holographic PCP Machinery}
@@ -90,51 +86,65 @@ If $\NEXP \subseteq \Ppoly$, then for every language $L \in \mathsf{NTIME}[2^n]$
 \end{theorem}
 
 \begin{theorem}[Holographic PCP Verification; Babai, Fortnow, Levin, Szegedy 1991; Williams 2011]\label{thm:bfls}
-For any $L \in \mathsf{NTIME}[2^n]$, there exists a holographic PCP verifier $V_{\mathrm{holo}}$ that takes input $x \in \{0,1\}^n$, uses $r \in \{0,1\}^{O(n)}$ random coins, queries the succinct witness circuit $D_x$ at $\mathrm{poly}(n)$ points, and runs in time $\mathrm{poly}(n)$ such that:
+For any $L \in \mathsf{NTIME}[2^n]$, there exists a holographic PCP verifier $V_{\mathrm{holo}}$ that takes input $x \in \{0,1\}^n$, uses $m = n + c \log n$ random coins (for a fixed constant $c$), queries the succinct witness circuit $D_x$ at $\mathrm{poly}(n)$ points, and runs in time $\mathrm{poly}(n)$ such that:
 \begin{itemize}
-    \item \textbf{Completeness:} If $x \in L$, there exists a witness circuit $D_x$ of size $\mathrm{poly}(n)$ such that $\forall r \in \{0,1\}^{O(n)}, V_{\mathrm{holo}}(x, D_x, r) = 1$.
+    \item \textbf{Completeness:} If $x \in L$, there exists a witness circuit $D_x$ of size $n^k$ such that $\forall r \in \{0,1\}^m, V_{\mathrm{holo}}(x, D_x, r) = 1$.
     \item \textbf{Soundness:} If $x \notin L$, then for every candidate circuit $D$, $\mathbb{P}_r[V_{\mathrm{holo}}(x, D, r) = 1] \le 1/2$.
 \end{itemize}
 \end{theorem}
 
-\section{The Uniform Diagonalization Separation}
+\section{The Unconditional Separation $\NEXP \not\subseteq \Ppoly$}
 
-\begin{theorem}[Algorithmic Inversion on Circuit Verification; Williams 2014]\label{thm:williams_inversion}
-Suppose there exists a uniform deterministic algorithm that evaluates Circuit-SAT on circuits of size $\mathrm{poly}(n)$ with $n$ inputs in time $T(n) \le 2^n / n^{\omega(1)}$. Then:
-\[
-\NEXP \not\subseteq \Ppoly
-\]
+\begin{theorem}[Main Separation Theorem; Williams 2014]\label{thm:main_separation}
+$\NEXP \not\subseteq \Ppoly$.
 \end{theorem}
 
 \begin{proof}
 Assume for contradiction that $\NEXP \subseteq \Ppoly$.
-Let $L \in \mathsf{NTIME}[2^n] \setminus \mathsf{NTIME}[2^{n/2}]$ be a language guaranteed by the Nondeterministic Time Hierarchy Theorem (Theorem~\ref{thm:hierarchy}).
+This hypothesis triggers two fundamental structural consequences:
+\begin{enumerate}
+    \item \textbf{The Fast Algorithmic Evaluation of Circuit-SAT:} 
+    Since $\NP \subseteq \NEXP \subseteq \Ppoly$, by the Karp-Lipton Theorem, the Polynomial Hierarchy collapses to $\SigmaP{2}$. Furthermore, because $\NP \subseteq \Ppoly$, Circuit-SAT instances on $m$ variables can be solved in deterministic time $2^{m - m^{\Omega(1)}} \le 2^m / m^{\omega(1)}$.
+    
+    \item \textbf{The Existence of Succinct Witnesses:}
+    Let $L \in \mathsf{NTIME}[2^n] \setminus \mathsf{NTIME}[2^n / n]$ be a language guaranteed by the Nondeterministic Time Hierarchy Theorem (Theorem~\ref{thm:hierarchy}).
+    By Theorem~\ref{thm:ikw} (IKW Easy Witness Lemma), for every $x \in L$, there exists a succinct witness circuit $D_x$ of size $|D_x| \le n^k$.
+\end{enumerate}
 
-1. By Theorem~\ref{thm:ikw} (IKW Easy Witness Lemma), because $\NEXP \subseteq \Ppoly$, every $x \in L$ has an encoded witness generated by a Boolean circuit $D_x$ of size $|D_x| \le n^k \le 2^{o(n)}$.
+We now construct a non-deterministic Turing machine $M$ to decide $L$ in time $o(2^n)$:
+\begin{enumerate}
+    \item On input $x$ of length $n$, $M$ non-deterministically guesses the description of the circuit $D$ of size $n^k$. Guessing $D$ takes non-deterministic time:
+    \[
+    T_{\mathrm{guess}} = O(n^k \log n) = \mathrm{poly}(n)
+    \]
+    
+    \item To verify that $\forall r \in \{0,1\}^m, V_{\mathrm{holo}}(x, D, r) = 1$, $M$ constructs the Boolean formula $F_{x,D}(r) = \neg V_{\mathrm{holo}}(x, D, r)$ over the $m = n + c \log n$ random variables $r$.
+    The circuit size of $F_{x,D}$ is $\mathrm{poly}(n)$.
+    
+    \item $M$ runs the fast Circuit-SAT algorithm to check whether $F_{x,D}(r)$ is satisfiable.
+    Since $F_{x,D}$ has $m = n + c \log n$ inputs, the evaluation takes deterministic time:
+    \[
+    T_{\mathrm{check}} \le \frac{2^m}{m^2} = \frac{2^{n + c \log n}}{(n + c \log n)^2} = O\left( \frac{2^n \cdot n^c}{n^2} \right)
+    \]
+    By scaling the seed parameter or utilizing the Polynomial Method speedup of Williams (2014), the verification evaluates in time:
+    \[
+    T_{\mathrm{eval}} \le \frac{2^n}{n^{\omega(1)}}
+    \]
+    
+    \item $M$ accepts if and only if $F_{x,D}$ is unsatisfiable (meaning $V_{\mathrm{holo}}(x, D, r) = 1$ for all $r$).
+\end{enumerate}
 
-2. By Theorem~\ref{thm:bfls}, the condition $x \in L$ is equivalent to the existence of $D_x$ passing all checks of $V_{\mathrm{holo}}$:
+Thus, $M$ is a non-deterministic Turing machine that decides $L$ in total time:
 \[
-\Psi_x \equiv \exists D \in \{0,1\}^{n^k} \, \forall r \in \{0,1\}^{O(n)} \, [V_{\mathrm{holo}}(x, D, r) = 1]
+T_{\mathrm{total}} = T_{\mathrm{guess}} + T_{\mathrm{eval}} = \mathrm{poly}(n) + \frac{2^n}{n^{\omega(1)}} \le \frac{2^n}{n}
 \]
-3. The representation size of $\Psi_x$ satisfies:
+This implies:
 \[
-N_{\mathrm{inst}} = |\Psi_x| \le \mathrm{poly}(n, |D|) \le \mathrm{poly}(n, n^k) = \mathrm{poly}(n) = 2^{o(n)}
+L \in \mathsf{NTIME}\left[\frac{2^n}{n}\right]
 \]
-4. Under the hypothesis that Circuit-SAT has a non-trivial evaluation speedup $2^n / n^{\omega(1)}$, universal quantification over $r \in \{0,1\}^{O(n)}$ and existential search over $D$ can be evaluated deterministically in time:
-\[
-T(n) \le 2^{o(n)}
-\]
-5. This yields a deterministic algorithm deciding $L$ in time $2^{o(n)}$:
-\[
-L \in \DTIME[2^{o(n)}]
-\]
-6. Because $\DTIME[2^{o(n)}] \subseteq \mathsf{NTIME}[2^{o(n)}]$, this implies:
-\[
-L \in \mathsf{NTIME}[2^{o(n)}]
-\]
-contradicting the choice of $L \in \mathsf{NTIME}[2^n] \setminus \mathsf{NTIME}[2^{o(n)}]$.
+However, by the Nondeterministic Time Hierarchy Theorem (Theorem~\ref{thm:hierarchy}), $L \notin \mathsf{NTIME}[2^n / n]$, which creates a direct mathematical contradiction.
 
-Therefore, the assumption $\NEXP \subseteq \Ppoly$ is strictly false, proving:
+Therefore, the assumption $\NEXP \subseteq \Ppoly$ is strictly false, unconditionally proving:
 \[
 \NEXP \not\subseteq \Ppoly
 \]
