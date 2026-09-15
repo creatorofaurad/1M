@@ -1,0 +1,269 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Typography & Institutional Styling ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+% --- Color Palette ---
+\definecolor{primary}{RGB}{16, 44, 87}       % Deep Oxford Navy
+\definecolor{secondary}{RGB}{53, 95, 142}    % Slate Blue
+\definecolor{accent}{RGB}{180, 40, 40}       % Cardinal Crimson
+\definecolor{codebg}{RGB}{248, 249, 251}     % Ultra-light gray/slate
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    citecolor=secondary,
+    urlcolor=primary,
+    pdftitle={Exponential Proof Complexity Lower Bounds on High-Dimensional Ramanujan Complexes via Coboundary Systole Expansion},
+    pdfauthor={Srijan Mandal}
+}
+
+% --- Section Styling ---
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{primary}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{secondary}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\color{primary}}{\thesubsubsection}{1em}{}
+
+% --- Header & Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\scshape Srijan Mandal $\cdot$ Formal Proof Complexity Monograph}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Theorem Environments ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{axiom}[theorem]{Axiom}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- Mathematical Macros ---
+\newcommand{\NEXP}{\mathbf{NEXP}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\PP}{\mathbf{P}}
+\newcommand{\Ppoly}{\mathbf{P/poly}}
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Width}{\mathrm{Width}}
+\newcommand{\Size}{\mathrm{Size}}
+\newcommand{\Sys}{\mathrm{Sys}}
+\newcommand{\Supp}{\mathrm{Supp}}
+\newcommand{\Vars}{\mathrm{Vars}}
+
+\title{\Huge\bfseries\color{primary} Exponential Proof Complexity Lower Bounds on High-Dimensional Ramanujan Complexes\\[0.3em]
+\Large Coboundary Expansion, Linear 2-Systoles, and the $2^{\Omega(n)}$ Resolution Width Barrier}
+\author{\textbf{Srijan Mandal}\\[0.3em]
+\small Independent Research $\cdot$ ORCID: 0009-0002-6899-6185 $\cdot$ SSRN: 7461081\\[0.2em]
+\small \texttt{creatorofaurad@gmail.com} $\cdot$ \url{https://github.com/creatorofaurad/1M}}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In this monograph, I establish an unconditional exponential lower bound of form $2^{\Omega(n)}$ for Resolution refutations of constraint systems derived from 2-dimensional simplicial Ramanujan complexes (Lubotzky--Samuels--Vishne). By moving beyond single-gate information theory and framing the refutation as an information bottleneck across topological cuts, I eliminate the classical $\mathcal{O}(\log n)$ DAG-to-tree reconvergence penalty. 
+
+The proof proceeds via two core geometric lemmas:
+\begin{enumerate}
+    \item \textbf{Lemma 1 (The 2-Systole Boundary Measure):} I define a sub-clause progress measure $\mu(C)$ tracking the minimal number of 2-face axioms required to derive any clause $C$. By the sub-additivity of resolution inferences and the linear 2-systole $\mathrm{Sys}_2(X) \ge \mu_0 n$, there exists a critical clause $C^*$ at the median threshold $\frac{1}{3} \mathrm{Sys}_2(X) \le \mu(C^*) \le \frac{2}{3} \mathrm{Sys}_2(X)$ whose active boundary variables satisfy $|C^*| \ge \gamma \cdot \mu(C^*) = \Omega(n)$ via $\gamma$-coboundary expansion.
+    \item \textbf{Lemma 2 (The 2-Complex Resolution Lifting):} I prove that the minimal refutation width of the parity-check formula $\Phi_X$ is lower-bounded by $\mathrm{Width}(\Phi_X \vdash \bot) \ge \alpha n$, where $\alpha = \frac{1}{3} \gamma \mu_0 > 0$.
+\end{enumerate}
+Applying the Ben-Sasson--Wigderson Size-Width Theorem directly to the 2-complex yields:
+\[
+\mathrm{Size}(\Pi \vdash \bot) \ge \exp\left( \frac{(\mathrm{Width}(\Phi_X \vdash \bot) - k)^2}{n} \right) = \exp\left( \frac{(\alpha n - 7)^2}{n} \right) = \mathbf{2^{\Omega(n)}}.
+\]
+This demonstrates that 2-dimensional topological expansion creates an uncompressible memory bottleneck, forcing exponential refutation size.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\section{Introduction and Theoretical Substrate}
+
+A central challenge in circuit and proof complexity is the gap between formula lower bounds ($2^{\Omega(n)}$) and general DAG lower bounds ($2^{\Omega(n / \log n)}$). In standard 1-dimensional expander graphs, an adversarial DAG can evaluate intermediate linear parities, bypassing local correlation bounds.
+
+In this work, I resolve this bottleneck by lifting the underlying structure to a **2-Dimensional Simplicial Ramanujan Complex** $X = (X^{(0)}, X^{(1)}, X^{(2)})$, constructed via Lubotzky--Samuels--Vishne (LSV) arithmetic lattices over local fields.
+
+\begin{definition}[$(n, k, \gamma)$-Ramanujan 2-Complex]
+A 2-dimensional simplicial complex $X$ with $n$ vertices is an $(n, k, \gamma)$-Ramanujan complex if:
+\begin{enumerate}
+    \item Each 2-face $\sigma \in X^{(2)}$ has boundary length $|\partial \sigma| \le k$ (with $k=3$ or $7$).
+    \item The 2-systole of $X$ over $\mathbb{F}_2$ is linear in the number of vertices:
+    \[
+    \mathrm{Sys}_2(X) = \min \{ |\omega|_0 \mid \omega \in Z_2(X, \mathbb{F}_2) \setminus B_2(X, \mathbb{F}_2) \} \ge \mu_0 \cdot n
+    \]
+    for an absolute geometric constant $\mu_0 > 0$.
+    \item $X$ exhibits $\gamma$-coboundary expansion on cochains $\eta \in C^1(X, \mathbb{F}_2)$:
+    \[
+    |\delta^1 \eta| \ge \gamma \cdot \min_{\tau \in B^1(X, \mathbb{F}_2)} |\eta \oplus \tau|
+    \]
+    for a spectral constant $\gamma > 0$.
+\end{enumerate}
+\end{definition}
+
+---
+
+\section{The Parity-Check Formula $\Phi_X$}
+
+Let $X$ be an $(n, k, \gamma)$-Ramanujan 2-complex. We associate each 1-cell (edge) $e \in X^{(1)}$ with a Boolean variable $x_e \in \{0, 1\}$.
+
+\begin{definition}[Face-Parity CNF Formula $\Phi_X$]
+For each 2-face $\sigma \in X^{(2)}$ with boundary 1-cycle $\partial \sigma = \{e_1, e_2, \dots, e_k\}$, we enforce the parity constraint:
+\[
+\bigoplus_{e \in \partial \sigma} x_e = 1.
+\]
+Expanding each parity constraint into $2^{k-1}$ standard CNF clauses yields the formula $\Phi_X = \bigwedge_{\sigma \in X^{(2)}} \mathrm{CNF}(\partial \sigma)$. The initial clause width is $\mathrm{width}(\Phi_X) = k \le 7$.
+\end{definition}
+
+\begin{lemma}[Global Unsatisfiability via 2-Systole]
+The formula $\Phi_X$ is unsatisfiable.
+\end{lemma}
+
+\begin{proof}
+Summing the parity constraints over all 2-faces in a closed 2-cycle $Z \in Z_2(X, \mathbb{F}_2)$ over $\mathbb{F}_2$:
+\[
+\sum_{\sigma \in Z} \bigoplus_{e \in \partial \sigma} x_e = \bigoplus_{e \in X^{(1)}} \mathrm{deg}_Z(e) \cdot x_e \equiv 0 \pmod 2
+\]
+because every edge $e$ in a 2-cycle appears in an even number of 2-faces ($\mathrm{deg}_Z(e) \equiv 0 \pmod 2$). However, the sum of the right-hand sides is $|Z| \pmod 2 = 1 \pmod 2$ for an odd 2-cycle. Since $X$ contains non-trivial odd 2-cycles with $|Z| \ge \mathrm{Sys}_2(X) \ge \mu_0 n$, $\Phi_X$ has no satisfying assignment.
+\end{proof}
+
+---
+
+\section{Lemma 1: The 2-Systole Boundary Measure}
+
+Let $\Pi = (C_1, C_2, \dots, C_S)$ be a valid Resolution refutation of $\Phi_X$ terminating at the empty clause $C_S = \bot$.
+
+\begin{definition}[Sub-Clause Axiom Measure $\mu(C)$]
+For any derived clause $C \in \Pi$, define $\mu(C)$ as the minimum number of 2-face axiom sets $\mathrm{CNF}(\partial \sigma)$ required to semantically imply $C$:
+\[
+\mu(C) = \min \{ |S| \mid S \subseteq X^{(2)}, \ \bigwedge_{\sigma \in S} \mathrm{CNF}(\partial \sigma) \models C \}.
+\]
+\end{definition}
+
+\begin{lemma}[Properties of the Measure $\mu$]
+The measure $\mu$ satisfies:
+\begin{enumerate}
+    \item \textbf{Base Case:} For any initial axiom clause $A \in \Phi_X$, $\mu(A) = 1$.
+    \item \textbf{Terminal Case:} For the empty clause $\bot$, $\mu(\bot) \ge \mathrm{Sys}_2(X) \ge \mu_0 n$.
+    \item \textbf{Sub-Additivity:} If clause $C$ is derived from parents $A$ and $B$ via the resolution rule $\frac{A \lor x \quad B \lor \neg x}{A \lor B}$, then:
+    \[
+    \mu(C) \le \mu(A) + \mu(B).
+    \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+If $S_A$ implies $A$ and $S_B$ implies $B$, then $S_A \cup S_B$ semantically implies $A \lor B$. Thus $\mu(C) \le |S_A \cup S_B| \le \mu(A) + \mu(B)$. For $\bot$, any set $S$ implying $\bot$ must contain a closed 2-cycle, forcing $|S| \ge \mathrm{Sys}_2(X)$.
+\end{proof}
+
+\begin{theorem}[Existence of the Critical High-Width Clause]\label{thm:critical_clause}
+There exists a clause $C^* \in \Pi$ such that:
+\[
+\frac{1}{3} \mathrm{Sys}_2(X) \le \mu(C^*) \le \frac{2}{3} \mathrm{Sys}_2(X)
+\]
+and its active variable count satisfies:
+\[
+|C^*| = |\Vars(C^*)| \ge \gamma \cdot \mu(C^*) \ge \frac{1}{3} \gamma \mu_0 n = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+Because $\mu(\mathrm{Axiom}) = 1$ and resolution is binary ($\mu(C) \le \mu(A) + \mu(B)$), the measure $\mu$ cannot jump over an interval of width $> \mu(A) \ge 1$. Thus, there exists a clause $C^*$ in $\Pi$ whose measure lies in $[\frac{1}{3} \mathrm{Sys}_2, \frac{2}{3} \mathrm{Sys}_2]$.
+
+Let $S \subseteq X^{(2)}$ be the minimal set of faces of size $|S| = \mu(C^*)$ implying $C^*$. 
+Because $|S| \le \frac{2}{3} \mathrm{Sys}_2(X) < \mathrm{Sys}_2(X)$, $S$ cannot contain any non-trivial closed 2-cycle. 
+Therefore, its geometric 1-boundary $\partial_2 S \in C_1(X, \mathbb{F}_2)$ is strictly non-zero.
+
+By the $\gamma$-coboundary expansion of $X$:
+\[
+|\partial_2 S| \ge \gamma \cdot |S| = \gamma \cdot \mu(C^*).
+\]
+Every edge $e \in \partial_2 S$ appears in an odd number of faces of $S$. If $x_e \notin \Vars(C^*)$, flipping the value of $x_e$ would alter the satisfiability of the axioms in $S$ while leaving $C^*$ unaffected, contradicting the minimality of $S$. Therefore, every boundary edge must appear as a literal in $C^*$:
+\[
+|C^*| \ge |\partial_2 S| \ge \gamma \cdot \mu(C^*) \ge \frac{1}{3} \gamma \mu_0 n = \Omega(n).
+\]
+\end{proof}
+
+---
+
+\section{Lemma 2: The 2-Complex Resolution Lifting}
+
+\begin{theorem}[Resolution Refutation Width Lower Bound]\label{thm:width_bound}
+For any $(n, k, \gamma)$-Ramanujan 2-complex $X$, the resolution refutation width of $\Phi_X$ satisfies:
+\[
+\Width(\Phi_X \vdash \bot) \ge \alpha \cdot n
+\]
+where $\alpha = \frac{1}{3} \gamma \mu_0 > 0$.
+\end{theorem}
+
+\begin{proof}
+The refutation width is defined as $\Width(\Pi) = \max_{C \in \Pi} |C|$. By Theorem \ref{thm:critical_clause}, the refutation $\Pi$ contains the critical clause $C^*$ with $|C^*| \ge \alpha n$. Since this holds for every valid resolution refutation $\Pi$ of $\Phi_X$:
+\[
+\Width(\Phi_X \vdash \bot) = \min_{\Pi \vdash \bot} \Width(\Pi) \ge |C^*| \ge \alpha n = \Omega(n).
+\]
+\end{proof}
+
+---
+
+\section{The Exponential Size Lower Bound ($2^{\Omega(n)}$)}
+
+We now invoke the fundamental Size-Width Theorem of Ben-Sasson and Wigderson.
+
+\begin{theorem}[Ben-Sasson--Wigderson Size-Width Theorem, JACM 2001]\label{thm:bsw}
+Let $\Phi$ be an unsatisfiable CNF formula on $N$ variables with initial clause width $k$. The size of any tree-like or general DAG Resolution refutation $\Pi \vdash \bot$ satisfies:
+\[
+\Size(\Pi) \ge \exp\left( \frac{(\Width(\Phi \vdash \bot) - k)^2}{2 N} \right).
+\]
+\end{theorem}
+
+\begin{theorem}[Master Exponential Lower Bound on Ramanujan 2-Complexes]\label{thm:master_exp}
+Let $X$ be an $(n, k, \gamma)$-Ramanujan 2-complex with $N = |X^{(1)}| \le c_1 n$ edges and maximum face degree $k \le 7$. 
+Then every Resolution refutation of the face-parity formula $\Phi_X$ has size:
+\[
+\Size(\Pi \vdash \bot) \ge \exp\left( \frac{(\alpha n - 7)^2}{2 c_1 n} \right) = \mathbf{2^{\Omega(n)}}.
+\]
+\end{theorem}
+
+\begin{proof}
+Substituting $\Width(\Phi_X \vdash \bot) \ge \alpha n$ (Theorem \ref{thm:width_bound}), $k \le 7$, and $N \le c_1 n$ into Theorem \ref{thm:bsw}:
+\[
+\Size(\Pi \vdash \bot) \ge \exp\left( \frac{(\alpha n - 7)^2}{2 c_1 n} \right) = \exp\left( \frac{\alpha^2 n^2 - 14\alpha n + 49}{2 c_1 n} \right) = \exp\left( \frac{\alpha^2}{2 c_1} n - \mathcal{O}(1) \right) = \mathbf{2^{\Omega(n)}}.
+\]
+\end{proof}
+
+---
+
+\section{Conclusion and Complexity Implications}
+
+By shifting the lower-bound argument from local gate correlation to **2-dimensional coboundary expansion and linear 2-systoles**, the proof establishes:
+\begin{enumerate}
+    \item **Elimination of the Spira Loss:** The information bottleneck is enforced by the topological boundary $|\partial_2 S| \ge \gamma |S|$, which cannot be compressed by gate sharing in a DAG.
+    \item **Unconditional Proof Complexity Separation:** For parity formulas on Ramanujan 2-complexes, Resolution refutations require size $2^{\Omega(n)}$.
+\end{enumerate}
+
+\end{document}
