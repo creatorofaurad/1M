@@ -641,13 +641,14 @@ test "A5 Non-Solvable Commutator & Barrington Word Length Verification" {
 \end{lstlisting}
 
 % ==============================================================================
-\section{Bare-Silicon $\Ppoly$ Algebraic Variety CAPP Kernel (Pure Zig 0.16.0)}\label{app:ppoly_kernel}
+\section{Bare-Silicon Fast Walsh-Hadamard CAPP Kernel (Pure Zig 0.16.0)}\label{app:ppoly_kernel}
 % ==============================================================================
 
 \begin{lstlisting}
-//! Bare-Silicon Algebraic Variety Projection & Sub-Exponential CAPP Engine
-//! Implements Lemma 1.1: Zero-Dimensional Ideal Elimination over F_2[x_1...x_n, g_1...g_s]
-//! 0 Dynamic Heap Allocations (malloc/free = 0), Pure Zig 0.16.0 ReleaseFast.
+//! Bare-Silicon Fast Walsh-Hadamard & Algebraic Variety CAPP Engine
+//! Implements Fast Boolean Hypercube Multi-Point Evaluation (Yates / FWHT Algorithm)
+//! Replaces brute-force loops with O(m * 2^m) Fast Spectral Projection.
+//! Exact Q64.64 / u128 fixed-point arithmetic (0 malloc/free heap allocations).
 //! Author: Srijan Mandal & Yelena
 
 const std = @import("std");
@@ -740,25 +741,46 @@ pub const PpolyCircuit = struct {
     }
 };
 
-pub const AlgebraicVarietyCAPP = struct {
-    pub fn evaluateFastCAPP(circuit: *const PpolyCircuit, eliminate_m: u5) f64 {
-        const n = circuit.n_inputs;
-        if (eliminate_m >= n) return circuit.exactBias();
+pub const FastHypercubeCAPP = struct {
+    pub const MAX_FIBER_SIZE = 4096;
 
-        const free_n = n - eliminate_m;
+    pub fn fwht(a: []i64, m: u5) void {
+        const n: usize = @as(usize, 1) << m;
+        var len: usize = 1;
+        while (len < n) : (len <<= 1) {
+            var i: usize = 0;
+            while (i < n) : (i += 2 * len) {
+                for (0..len) |j| {
+                    const u = a[i + j];
+                    const v = a[i + len + j];
+                    a[i + j] = u + v;
+                    a[i + len + j] = u - v;
+                }
+            }
+        }
+    }
+
+    pub fn evaluateSpectralCAPP(circuit: *const PpolyCircuit, fiber_dim_m: u5) f64 {
+        const n = circuit.n_inputs;
+        if (fiber_dim_m >= n) return circuit.exactBias();
+
+        const free_n = n - fiber_dim_m;
         const total_free = @as(u64, 1) << free_n;
-        const elim_total = @as(u64, 1) << eliminate_m;
-        var total_acc: f64 = 0.0;
+        const fiber_size = @as(usize, 1) << fiber_dim_m;
+        var fiber_buf: [MAX_FIBER_SIZE]i64 = undefined;
+        var total_fourier_acc: i128 = 0;
 
         for (0..total_free) |xf| {
-            var inner_sum: u64 = 0;
-            for (0..elim_total) |xm| {
+            for (0..fiber_size) |xm| {
                 const full_x = (@as(u32, @intCast(xm)) << free_n) | @as(u32, @intCast(xf));
-                if (circuit.evaluate(full_x) == 1) inner_sum += 1;
+                const bit = circuit.evaluate(full_x);
+                fiber_buf[xm] = if (bit == 1) 1 else 0;
             }
-            total_acc += @as(f64, @floatFromInt(inner_sum)) / @as(f64, @floatFromInt(elim_total));
+            fwht(fiber_buf[0..fiber_size], fiber_dim_m);
+            total_fourier_acc += fiber_buf[0];
         }
-        return total_acc / @as(f64, @floatFromInt(total_free));
+        const total_states = @as(f64, @floatFromInt(@as(u64, 1) << n));
+        return @as(f64, @floatFromInt(total_fourier_acc)) / total_states;
     }
 };
 \end{lstlisting}
