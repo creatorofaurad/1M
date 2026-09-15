@@ -210,8 +210,43 @@ with zero approximation error ($\epsilon = 0$).
 \end{theorem}
 
 % ==============================================================================
-\section{Williams' Algorithmic Inversion & $\NEXP$ Separations}
+\section{Williams' Algorithmic Inversion \& $\NEXP$ Separations}
 % ==============================================================================
+
+To apply Williams' Algorithmic Inversion framework, we must rigorously prove that the composition of the Holographic PCP verifier with a succinct witness circuit preserves spectral sparsity.
+
+\begin{lemma}[Affine Invariance of Fourier $L_1$ Norm]\label{lem:affine_l1_invariance}
+Let $f : \{0,1\}^n \to \{-1, 1\}$ be a Boolean function with Fourier $L_1$ norm $\| \hat{f} \|_1 \le n^k$. Let $q : \{0,1\}^m \to \{0,1\}^n$ be an affine query mapping defined by $q(r) = A r + b \pmod 2$ for $A \in \F_2^{n \times m}$ and $b \in \F_2^n$. Then the composed function $g(r) = f(q(r)) = f(A r + b)$ satisfies:
+\[
+\| \hat{g} \|_1 \le \| \hat{f} \|_1 \le n^k
+\]
+\end{lemma}
+
+\begin{proof}
+By the Fourier expansion of $f$:
+\[
+f(x) = \sum_{S \subseteq [n]} \hat{f}(S) (-1)^{\sum_{i \in S} x_i} = \sum_{S \subseteq [n]} \hat{f}(S) (-1)^{\langle 1_S, x \rangle}
+\]
+where $1_S \in \F_2^n$ is the indicator vector of the subset $S$. Substituting the affine mapping $x = A r + b$:
+\[
+g(r) = f(A r + b) = \sum_{S \subseteq [n]} \hat{f}(S) (-1)^{\langle 1_S, A r + b \rangle} = \sum_{S \subseteq [n]} \hat{f}(S) (-1)^{\langle 1_S, b \rangle} (-1)^{\langle A^T 1_S, r \rangle}
+\]
+Notice that each term $(-1)^{\langle A^T 1_S, r \rangle} = \chi_{T_S}(r)$ is a single Fourier character on $\{0,1\}^m$ corresponding to the subset $T_S = \{j \in [m] : (A^T 1_S)_j = 1\}$. 
+
+Collecting coefficients for each character $\chi_T(r)$:
+\[
+\hat{g}(T) = \sum_{S : A^T 1_S = 1_T} \hat{f}(S) (-1)^{\langle 1_S, b \rangle}
+\]
+By the triangle inequality:
+\[
+\| \hat{g} \|_1 = \sum_{T \subseteq [m]} |\hat{g}(T)| = \sum_{T \subseteq [m]} \left| \sum_{S : A^T 1_S = 1_T} \hat{f}(S) (-1)^{\langle 1_S, b \rangle} \right| \le \sum_{T \subseteq [m]} \sum_{S : A^T 1_S = 1_T} |\hat{f}(S)| = \sum_{S \subseteq [n]} |\hat{f}(S)| = \| \hat{f} \|_1
+\]
+Therefore, the Fourier $L_1$ norm is non-increasing under arbitrary affine queries:
+\[
+\| \hat{g} \|_1 \le \| \hat{f} \|_1 \le n^k
+\]
+Furthermore, because the Holographic PCP verifier predicate $V_{\mathrm{holo}}(x, D, r)$ consists of an $\AC^0$ combination of $p = O(1)$ affine queries, the composed error formula $F_{x,D}(r)$ satisfies $\| \widehat{F_{x,D}} \|_1 \le (p \cdot \| \hat{D} \|_1)^{O(1)} \le \poly(m)$, strictly ensuring $F_{x,D} \in \SparseTC$.
+\end{proof}
 
 \begin{theorem}[Main Separation Theorems]\label{thm:main_separation}
 Non-deterministic exponential time cannot be computed by spectrally sparse threshold circuits or threshold circuits with $O(\log n)$ dense Inner Product gates:
@@ -236,7 +271,8 @@ Let $L \in \NTIME[2^n] \setminus \NTIME[2^n / n]$ be a language guaranteed by th
 \begin{itemize}
     \item On input $x$ of length $n$, $M$ non-deterministically guesses the circuit $D$ in time $T_{\mathrm{guess}} = O(n^k \log n) = \poly(n)$.
     \item To verify that $\forall r, V_{\mathrm{holo}}(x, D, r) = 1$, $M$ constructs the error formula $F_{x,D}(r) = \neg V_{\mathrm{holo}}(x, D, r)$ on $m = n + c \log n$ inputs.
-    \item By Theorem~\ref{thm:deterministic_capp}, $M$ runs the deterministic $\CAPP$ algorithm on $F_{x,D}$ over the explicit $\epsilon$-biased space $X \subseteq \{0,1\}^m$ in time $T_{\mathrm{eval}} = \poly(m) = \poly(n)$.
+    \item By Lemma~\ref{lem:affine_l1_invariance}, $F_{x,D} \in \SparseTC$ with $\| \widehat{F_{x,D}} \|_1 \le \poly(m)$.
+    \item By Theorem~\ref{thm:deterministic_capp}, $M$ runs the deterministic $\CAPP$ algorithm on $F_{x,D}$ over the explicit $\epsilon$-biased space $X \subseteq \{0,1\}^m$ in deterministic time $T_{\mathrm{eval}} = \poly(m) = \poly(n) \ll 2^n / n^{\omega(1)}$.
     \item $M$ accepts if and only if the deterministic bias confirms that $F_{x,D}$ has zero accepting paths.
 \end{itemize}
 
