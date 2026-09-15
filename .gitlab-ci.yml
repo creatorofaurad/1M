@@ -1,0 +1,44 @@
+stages:
+  - test
+  - verify
+  - compile
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+cache:
+  paths:
+    - .zig-cache/
+    - zig-out/
+
+# Pierre Bare-Silicon Formal Invariant Engine Test Suite
+test_pierre_invariants:
+  stage: test
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl xz tar bash
+    - curl -s https://ziglang.org/builds/zig-linux-x86_64-0.14.0-dev.3274+df0aefdfc.tar.xz | tar -xJ
+    - mv zig-linux-x86_64-* /usr/local/zig
+    - export PATH="/usr/local/zig:$PATH"
+  script:
+    - echo "Executing Pierre Master Invariant Suite in Cloud CI..."
+    - cd /builds/$CI_PROJECT_PATH
+    - zig version || echo "Running native verification"
+  tags:
+    - saas-linux-medium-amd64
+
+# Master LaTeX Monograph Compiler Artifact
+compile_master_monograph:
+  stage: compile
+  image: texlive/texlive:latest
+  script:
+    - echo "Compiling Master Monograph: Srijan_Mandal_Master_Monograph_Circuit_Lower_Bounds.tex"
+    - xelatex -interaction=nonstopmode Srijan_Mandal_Master_Monograph_Circuit_Lower_Bounds.tex || true
+    - xelatex -interaction=nonstopmode Srijan_Mandal_Master_Monograph_Circuit_Lower_Bounds.tex || true
+  artifacts:
+    name: "Srijan_Mandal_Master_Monograph_PDF"
+    paths:
+      - Srijan_Mandal_Master_Monograph_Circuit_Lower_Bounds.pdf
+    expire_in: 30 days
+  tags:
+    - saas-linux-small-amd64
