@@ -1,0 +1,45 @@
+\chapter{The Sub-Additive Resolution Measure and Boundary Retention}
+
+\section{The Resolution Proof System}
+A Resolution refutation $\Pi$ of an unsatisfiable CNF formula $\Phi$ is a sequence of clauses $\Pi = (C_1, C_2, \dots, C_S = \bot)$ where each clause $C_i$ is either an initial axiom $C_i \in \Phi$ or is derived from earlier clauses $C_j, C_k$ ($j, k < i$) via the resolution rule:
+\[
+\frac{A \lor x \quad B \lor \neg x}{A \lor B}.
+\]
+
+\section{The Axiom-Support Measure $\mu(C)$}
+\begin{definition}[Minimal Semantic Face Support]
+For any clause $C \in \Pi$, define $\Faces(C) \subseteq X^{(2)}$ as a minimal set of 2-faces such that:
+\[
+\bigwedge_{\sigma \in \Faces(C)} \mathrm{CNF}(\partial \sigma) \models C.
+\]
+The measure of $C$ is $\mu(C) = |\Faces(C)|$.
+\end{definition}
+
+\begin{lemma}[Strict Sub-Additivity]
+For any resolution step $C = \mathrm{Res}(A, B)$, $\mu(C) \le \mu(A) + \mu(B)$.
+\end{lemma}
+
+\begin{proof}
+Let $S_A = \Faces(A)$ and $S_B = \Faces(B)$. 
+Since $\bigwedge_{\sigma \in S_A} \mathrm{CNF}(\partial \sigma) \models A$ and $\bigwedge_{\sigma \in S_B} \mathrm{CNF}(\partial \sigma) \models B$, the combined face set $S_A \cup S_B$ semantically implies $A \land B$, which classically implies $A \lor B \equiv C$. 
+Thus $\mu(C) \le |S_A \cup S_B| \le |S_A| + |S_B| = \mu(A) + \mu(B)$.
+\end{proof}
+
+\section{The Boundary Retention Invariant}
+\begin{theorem}[Boundary Retention under 2-Systole]
+Let $C$ be a clause with $\mu(C) \le \frac{2}{3}\mu_0 n$. 
+Then every boundary edge $e \in \partial_2(\Faces(C))$ must appear as an active literal variable in $C$:
+\[
+\partial_2(\Faces(C)) \subseteq \Vars(C).
+\]
+Consequently, $|\Vars(C)| \ge |\partial_2(\Faces(C))| \ge \gamma \cdot \mu(C)$.
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that there exists an edge $e_0 \in \partial_2(\Faces(C))$ such that $x_{e_0} \notin \Vars(C)$.
+Since $e_0$ is in the geometric boundary of $S = \Faces(C)$, it belongs to an odd number of faces in $S$.
+Consider a satisfying assignment $\alpha$ to the sub-formula $\bigwedge_{\sigma \in S \setminus \{\sigma_0\}} \mathrm{CNF}(\partial \sigma)$. 
+Flipping the single bit $\alpha(x_{e_0}) \to 1 - \alpha(x_{e_0})$ toggles the parity of $\sigma_0$ while preserving all other face parities. 
+Because $x_{e_0}$ does not appear in $C$, the evaluation of $C$ is completely independent of $x_{e_0}$, which violates the semantic minimality of $S$.
+Thus every boundary edge must be present in $C$.
+\end{proof}

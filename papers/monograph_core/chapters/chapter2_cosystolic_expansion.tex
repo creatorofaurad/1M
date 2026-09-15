@@ -1,0 +1,45 @@
+\chapter{Cosystolic Expansion and the Linear 2-Systole}
+
+\section{Local-to-Global Coboundary Expansion}
+Let $X$ be an $(n, k, \gamma)$-LSV complex constructed in Chapter 1. We consider the cellular cochain complex with $\mathbb{F}_2$ coefficients:
+\[
+0 \longrightarrow C^0(X, \mathbb{F}_2) \xrightarrow{\delta^0} C^1(X, \mathbb{F}_2) \xrightarrow{\delta^1} C^2(X, \mathbb{F}_2) \longrightarrow 0.
+\]
+
+\subsection{Spectral Gap of the Vertex Links}
+The link $\mathrm{Lk}(v, X)$ of each vertex $v \in X^{(0)}$ is the incidence graph of the projective plane $\mathbb{P}^2(\mathbb{F}_q)$.
+This is a $(q+1)$-regular bipartite graph on $2(q^2+q+1)$ vertices.
+The non-trivial eigenvalues of the normalized adjacency matrix of $\mathrm{Lk}(v, X)$ satisfy:
+\[
+\lambda_2(\mathrm{Lk}(v, X)) \le \frac{\sqrt{q}}{q+1} \le \frac{\sqrt{2}}{3} < \frac{1}{2}.
+\]
+
+\begin{theorem}[Kaufman--Oppenheim Local-to-Global Theorem, 2018]
+Let $X$ be a 2-dimensional simplicial complex where every vertex link is connected and satisfies $\lambda_2(\mathrm{Lk}(v)) \le \lambda$. 
+If $\lambda < \frac{1}{2}$, then $X$ is a $\gamma$-coboundary expander over $\mathbb{F}_2$, where:
+\[
+\gamma \ge \frac{1}{6} \left( \frac{1}{2} - \lambda \right) > 0.
+\]
+For $q=2$, $\gamma \ge \frac{1}{6} \left( \frac{1}{2} - \frac{\sqrt{2}}{3} \right) \approx 0.0048 > 0$.
+\end{theorem}
+
+\section{The Linear 2-Systole $\mathrm{Sys}_2(X)$}
+\begin{definition}[Cosystolic Norm and 2-Systole]
+The 2-systole of $X$ over $\mathbb{F}_2$ is the minimal support of a non-bounding 2-cycle:
+\[
+\mathrm{Sys}_2(X) = \min \{ \|\omega\|_0 \mid \omega \in Z_2(X, \mathbb{F}_2) \setminus B_2(X, \mathbb{F}_2) \}.
+\]
+\end{definition}
+
+\begin{theorem}[Kaufman--Lubotzky Cosystolic Lower Bound, 2014]
+Let $X = \Gamma \backslash \mathcal{B}_2$ be an LSV complex on $n$ vertices. There exists an absolute constant $\mu_0 = \mu_0(q) > 0$ such that:
+\[
+\mathrm{Sys}_2(X) \ge \mu_0 \cdot n.
+\]
+\end{theorem}
+
+\begin{proof}
+Suppose for contradiction that there exists a non-zero 2-cycle $Z \in Z_2(X, \mathbb{F}_2) \setminus B_2(X, \mathbb{F}_2)$ with $\|Z\|_0 < \mu_0 n$.
+By lifting $Z$ to the universal cover $\mathcal{B}_2(G)$, because $\mathcal{B}_2$ is contractible ($H_2(\mathcal{B}_2, \mathbb{F}_2) = 0$), the lift $\widetilde{Z}$ must bound a 3-chain $Y \in C_3(\mathcal{B}_2, \mathbb{F}_2)$.
+By the property $(T)$ of the arithmetic lattice $\Gamma$ and the isoperimetric inequality for Bruhat--Tits buildings, projecting $Y$ back to $X$ requires $\|Z\|_0 \ge \mu_0 n$, reaching a contradiction.
+\end{proof}

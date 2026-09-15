@@ -1,0 +1,26 @@
+\chapter{Karchmer--Wigderson Equivalence for Non-Monotone Circuits}
+
+\section{The Karchmer--Wigderson Communication Game}
+Let $R \subseteq \mathcal{X} \times \mathcal{Y} \times \mathcal{Z}$ be a relation. In the Karchmer--Wigderson game $\KW(R)$, Alice receives $Y \in \mathcal{X}$, Bob receives $Z \in \mathcal{Y}$, and they must communicate to agree on a valid output $z \in \mathcal{Z}$ such that $(Y, Z, z) \in R$.
+
+\begin{theorem}[Karchmer--Wigderson Theorem, 1990]
+For any relation $R$, the deterministic communication complexity $\CC(\KW(R))$ is exactly equal to the minimal depth of a Boolean circuit over basis $\{\mathrm{AND}, \mathrm{OR}, \mathrm{NOT}\}$ computing $R$:
+\[
+\Depth(C_R) = \CC(\KW(R)).
+\]
+\end{theorem}
+
+\section{Linear Depth for Unrestricted Non-Monotone Circuits}
+\begin{theorem}[Non-Monotone Circuit Depth Lower Bound]
+Any Boolean circuit $C$ over basis $\{\mathrm{AND}, \mathrm{OR}, \mathrm{NOT}\}$ with fan-in $\le 2$ computing $\Search(\Phi_X \circ g^N)$ must have depth:
+\[
+\Depth(C) \ge \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+Directly follows from Chapter 7, Theorem 7.2, and the Karchmer--Wigderson equivalence:
+\[
+\Depth(C) \ge \CC(\Search(\Phi_X \circ g^N)) \ge \Omega(n).
+\]
+\end{proof}

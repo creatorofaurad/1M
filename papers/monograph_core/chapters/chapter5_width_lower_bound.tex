@@ -1,0 +1,33 @@
+\chapter{Unconditional Resolution Width Lower Bound: $\Omega(n)$}
+
+\section{The Median Boundary Lemma}
+\begin{lemma}[Existence of the Median Clause $C^*$]
+In every Resolution refutation $\Pi = (C_1, \dots, C_S = \bot)$ of $\Phi_X$, there exists at least one clause $C^* \in \Pi$ satisfying:
+\[
+\frac{1}{3}\mu_0 n \le \mu(C^*) \le \frac{2}{3}\mu_0 n.
+\]
+\end{lemma}
+
+\begin{proof}
+At the start, all initial axioms $A \in \Phi_X$ have $\mu(A) = 1$.
+At the end, the empty clause $\bot$ requires a full 2-cycle to semantically contradict, so $\mu(\bot) \ge \mathrm{Sys}_2(X) \ge \mu_0 n$.
+Because resolution steps are binary, $\mu(C) \le \mu(A) + \mu(B) \le 2 \max(\mu(A), \mu(B))$.
+Thus, the measure $\mu$ cannot jump over an interval of length $\ge \frac{1}{3}\mu_0 n$ in a single step without landing inside $[\frac{1}{3}\mu_0 n, \frac{2}{3}\mu_0 n]$.
+\end{proof}
+
+\section{The Resolution Width Theorem}
+\begin{theorem}[Unconditional Resolution Width on Ramanujan 2-Complexes]
+For any $(n, k, \gamma)$-LSV complex $X$, the refutation width satisfies:
+\[
+\Width(\Phi_X \vdash \bot) \ge \frac{1}{3} \gamma \mu_0 \cdot n = \Omega(n).
+\]
+\end{theorem}
+
+\begin{proof}
+Let $C^*$ be the median clause from Lemma 5.1.
+By Chapter 4, Theorem 4.1, because $\mu(C^*) \le \frac{2}{3}\mu_0 n$, the boundary retention invariant gives:
+\[
+|C^*| = |\Vars(C^*)| \ge \gamma \cdot \mu(C^*) \ge \gamma \cdot \left(\frac{1}{3}\mu_0 n\right) = \frac{1}{3}\gamma \mu_0 n.
+\]
+Since the refutation width is $\Width(\Pi) = \max_{C \in \Pi} |C| \ge |C^*|$, and this holds for all valid refutations $\Pi$, the minimal refutation width is lower-bounded by $\alpha n$ where $\alpha = \frac{1}{3}\gamma \mu_0 > 0$.
+\end{proof}

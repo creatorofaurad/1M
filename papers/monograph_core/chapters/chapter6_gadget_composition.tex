@@ -1,0 +1,26 @@
+\chapter{Gadget Composition and the Composed Search Relation}
+
+\section{The Index Gadget $g$}
+Let $b = c \log n$ for a sufficiently large constant $c \ge 4$.
+We define the two-party Index gadget $g: \{0,1\}^b \times [b] \to \{0,1\}$ by:
+\[
+g(y, z) = y_z
+\]
+where Alice holds a $b$-bit string $y = (y_1, \dots, y_b) \in \{0,1\}^b$ and Bob holds an index $z \in [b] \cong \{0,1\}^{\log b}$.
+
+\section{The Composed Formula $\Phi_X \circ g^N$}
+Let $N = |X^{(1)}| \le 7n$ be the number of edge variables in $\Phi_X$.
+In the composed search problem $\Search(\Phi_X \circ g^N)$:
+\begin{itemize}
+    \item Alice is given $Y = (y^{(1)}, y^{(2)}, \dots, y^{(N)}) \in (\{0,1\}^b)^N$.
+    \item Bob is given $Z = (z^{(1)}, z^{(2)}, \dots, z^{(N)}) \in ([b])^N$.
+    \item The hidden edge assignment is $x = (g(y^{(1)}, z^{(1)}), \dots, g(y^{(N)}, z^{(N)})) \in \{0, 1\}^N$.
+\end{itemize}
+
+\begin{definition}[The Composed Search Problem $\Search(\Phi_X \circ g^N)$]
+Given $(Y, Z)$, Alice and Bob must communicate to output the identity of a 2-face $\sigma \in X^{(2)}$ that is violated under the implicit assignment $x(Y, Z)$:
+\[
+\bigoplus_{e \in \partial \sigma} g(y^{(e)}, z^{(e)}) \neq 1.
+\]
+\end{definition}
+Because $\Phi_X$ is unsatisfiable, such a violated face $\sigma$ is guaranteed to exist for all pairs $(Y, Z)$.

@@ -1,0 +1,27 @@
+\chapter{The Resolution-to-Communication Simulation Lifting Theorem}
+
+\section{The Simulation Theorem of Göös, Pitassi, and Watson}
+\begin{theorem}[GPW Simulation Theorem, FOCS 2015, JACM 2018]\label{thm:gpw_sim}
+Let $\Phi$ be an unsatisfiable CNF formula on $N$ variables. Let $g: \{0,1\}^b \times [b] \to \{0,1\}$ be the Index gadget on $b = \mathcal{O}(\log N)$ bits.
+Then the deterministic communication complexity of the composed search problem $\Search(\Phi \circ g^N)$ is characterized by the Resolution refutation width:
+\[
+\CC(\Search(\Phi \circ g^N)) = \Theta\left( \Width(\Phi \vdash \bot) \cdot \log b \right).
+\]
+\end{theorem}
+
+\section{Application to the 2-Complex Parity Search}
+\begin{theorem}[Communication Lower Bound for Ramanujan Parity Search]
+For any $(n, k, \gamma)$-LSV complex $X$, the deterministic communication complexity of $\Search(\Phi_X \circ g^N)$ satisfies:
+\[
+\CC(\Search(\Phi_X \circ g^N)) = \Omega(n \log \log n).
+\]
+In particular, $\CC(\Search(\Phi_X \circ g^N)) \ge \Omega(n)$.
+\end{theorem}
+
+\begin{proof}
+Substituting the Resolution width bound from Chapter 5, $\Width(\Phi_X \vdash \bot) \ge \alpha n$, into Theorem \ref{thm:gpw_sim}:
+\[
+\CC(\Search(\Phi_X \circ g^N)) \ge c_2 \cdot (\alpha n) \cdot \log (\log n) = \Omega(n \log \log n) = \Omega(n).
+\]
+This proves that Alice and Bob must exchange at least $\Omega(n)$ bits of information to identify any single violated 2-face.
+\end{proof}

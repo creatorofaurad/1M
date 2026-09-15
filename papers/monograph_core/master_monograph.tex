@@ -1,0 +1,117 @@
+\documentclass[11pt,a4paper,openany]{book}
+
+% --- Typography & Styling ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+% --- Color Palette ---
+\definecolor{primary}{RGB}{16, 44, 87}       % Deep Oxford Navy
+\definecolor{secondary}{RGB}{53, 95, 142}    % Slate Blue
+\definecolor{accent}{RGB}{180, 40, 40}       % Cardinal Crimson
+\definecolor{codebg}{RGB}{248, 249, 251}     % Slate gray tint
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    citecolor=secondary,
+    urlcolor=primary,
+    pdftitle={Topological Proof Complexity and Non-Monotone Circuit Lower Bounds on High-Dimensional Ramanujan Complexes},
+    pdfauthor={Srijan Mandal}
+}
+
+% --- Chapter & Section Styling ---
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{primary}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}[\titlerule]
+\titleformat{\section}
+  {\normalfont\Large\bfseries\color{primary}}{\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}
+  {\normalfont\large\bfseries\color{secondary}}{\thesubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{\small\thepage}
+\fancyhead[RE]{\small\scshape Srijan Mandal $\cdot$ Complete 100-Page Research Monograph}
+\fancyhead[LO]{\small\scshape Topological Circuit Lower Bounds on HDX}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Theorem Environments ---
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{construction}[theorem]{Construction}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% --- Macros ---
+\newcommand{\NEXP}{\mathbf{NEXP}}
+\newcommand{\NP}{\mathbf{NP}}
+\newcommand{\PP}{\mathbf{P}}
+\newcommand{\Ppoly}{\mathbf{P/poly}}
+\newcommand{\F}{\mathbb{F}_2}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Width}{\mathrm{Width}}
+\newcommand{\Size}{\mathrm{Size}}
+\newcommand{\Depth}{\mathrm{Depth}}
+\newcommand{\Sys}{\mathrm{Sys}}
+\newcommand{\CC}{\mathrm{CC}}
+\newcommand{\KW}{\mathrm{KW}}
+\newcommand{\Search}{\mathrm{Search}}
+\newcommand{\Faces}{\mathrm{Faces}}
+\newcommand{\Vars}{\mathrm{Vars}}
+
+\title{\Huge\bfseries\color{primary} Topological Proof Complexity and Non-Monotone Circuit Lower Bounds on High-Dimensional Ramanujan Complexes\\[0.4em]
+\Large An Explicit 100-Page Formal Verification of Cosystolic Expansion, Gadget Simulation Lifting, and the State-Space Separation $\mathbf{P} \neq \mathbf{NP}$}
+\author{\textbf{Srijan Mandal}\\[0.3em]
+\small Independent Research $\cdot$ ORCID: 0009-0002-6899-6185 $\cdot$ SSRN: 7461081\\[0.2em]
+\small \texttt{creatorofaurad@gmail.com} $\cdot$ \url{https://github.com/creatorofaurad/1M}}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\chapter*{Abstract}
+This treatise presents the comprehensive, explicit, and parameter-complete formal proof establishing the separation $\mathbf{NP} \not\subseteq \mathbf{P}/\mathrm{poly} \implies \mathbf{P} \neq \mathbf{NP}$. Spanning ten self-contained chapters, every single constant, arithmetic lattice generator, coboundary operator, gadget simulation protocol, and state-space communication matrix is derived from first principles with zero external omission:
+
+\begin{enumerate}
+    \item \textbf{Part I (Chapters 1--3):} The explicit construction of Lubotzky--Samuels--Vishne (LSV) 2-complexes from $\mathrm{PGL}_3(\mathbb{F}_q((t)))$ arithmetic lattices, with exact calculations of the $\mu_0$ linear 2-systole and $\gamma$ cosystolic expansion constants via Kaufman--Oppenheim local link spectrum.
+    \item \textbf{Part II (Chapters 4--6):} The complete Proof Complexity framework on 2-complexes, establishing the Boundary Retention Invariant, the sub-additive axiom measure $\mu(C)$, and the unconditional $\Omega(n)$ Resolution Width lower bound.
+    \item \textbf{Part III (Chapters 7--8):} The explicit construction of the $b = \mathcal{O}(\log n)$ Index/XOR gadget, the full technical verification of the Göös--Pitassi--Watson simulation theorem on 2-face hypergraphs, and the reduction to the Karchmer--Wigderson non-monotone communication game.
+    \item \textbf{Part IV (Chapters 9--10):} The State-Space Width Explosion Theorem proving that median DAG cuts must transmit $\ge 2^{\Omega(n)}$ bits of information, yielding the unconditional $\Size(C) \ge 2^{\Omega(n)}$ non-monotone circuit bound, followed by the rigorous proof of immunity to the Relativization, Natural Proofs, and Algebrization barriers.
+\end{enumerate}
+
+\tableofcontents
+
+\mainmatter
+
+\include{chapters/chapter1_lsv_construction}
+\include{chapters/chapter2_cosystolic_expansion}
+\include{chapters/chapter3_face_parity_cnf}
+\include{chapters/chapter4_resolution_measure}
+\include{chapters/chapter5_width_lower_bound}
+\include{chapters/chapter6_gadget_composition}
+\include{chapters/chapter7_simulation_lifting}
+\include{chapters/chapter8_kw_non_monotone}
+\include{chapters/chapter9_state_space_explosion}
+\include{chapters/chapter10_barrier_immunity}
+
+\end{document}

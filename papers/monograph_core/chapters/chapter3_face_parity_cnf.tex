@@ -1,0 +1,42 @@
+\chapter{The Face-Parity Formula $\Phi_X$ and Global Unsatisfiability}
+
+\section{Exact Construction of $\Phi_X$}
+Let $X$ be an $(n, k, \gamma)$-LSV complex with edge set $E = X^{(1)}$ of size $N = |X^{(1)}| \le 7n$, and 2-face set $F = X^{(2)}$ of size $m = |X^{(2)}| \le 7n$.
+
+Assign a Boolean variable $x_e \in \{0, 1\}$ to each edge $e \in E$.
+
+\begin{definition}[Face-Parity CNF Encoding]
+For each 2-face $\sigma = (e_1, e_2, e_3) \in X^{(2)}$, we define the linear parity constraint:
+\[
+x_{e_1} \oplus x_{e_2} \oplus x_{e_3} = 1.
+\]
+Expanding into CNF clauses of width 3:
+\[
+\mathrm{CNF}(\partial \sigma) = (x_{e_1} \lor x_{e_2} \lor x_{e_3}) \land (x_{e_1} \lor \neg x_{e_2} \lor \neg x_{e_3}) \land (\neg x_{e_1} \lor x_{e_2} \lor \neg x_{e_3}) \land (\neg x_{e_1} \lor \neg x_{e_2} \lor x_{e_3}).
+\]
+The master face-parity formula is:
+\[
+\Phi_X = \bigwedge_{\sigma \in X^{(2)}} \mathrm{CNF}(\partial \sigma).
+\]
+Total number of clauses: $|\Phi_X| = 4m \le 28n$.
+\end{definition}
+
+\section{Proof of Global Inconsistency via Non-Trivial 2-Cycles}
+\begin{theorem}
+The formula $\Phi_X$ is unsatisfiable over $\mathbb{F}_2$.
+\end{theorem}
+
+\begin{proof}
+Let $Z \in Z_2(X, \mathbb{F}_2)$ be an odd non-bounding 2-cycle guaranteed by Chapter 2 with $|Z| \ge \mathrm{Sys}_2(X) \ge \mu_0 n$.
+Summing all parity equations over $\sigma \in Z$:
+\[
+\bigoplus_{\sigma \in Z} \left( \bigoplus_{e \in \partial \sigma} x_e \right) = \bigoplus_{e \in E} \mathrm{deg}_Z(e) \cdot x_e.
+\]
+Because $Z$ is a 2-cycle ($\partial_2 Z = 0$), every edge $e \in E$ belongs to an even number of faces in $Z$, so $\mathrm{deg}_Z(e) \equiv 0 \pmod 2$. 
+Thus, the left-hand side evaluates to $0$.
+However, the right-hand side sums $1$ over all $|Z|$ faces:
+\[
+\bigoplus_{\sigma \in Z} 1 = |Z| \pmod 2 \equiv 1 \pmod 2.
+\]
+This yields $0 = 1$, proving $\Phi_X \models \bot$.
+\end{proof}
