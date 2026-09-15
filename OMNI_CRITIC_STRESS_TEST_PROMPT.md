@@ -77,3 +77,8 @@ For each of the 6 Chambers:
 1. **The Fatal Red-Team Attack:** Expose the most destructive potential counterexample or edge-case.
 2. **The Formal Mathematical Defense:** Prove why the 2-systole Ramanujan structure withstands the attack.
 3. **The Hardened Remediation Code/Lemma:** Deliver the exact LaTeX mathematical patch to be integrated directly into `NON_MONOTONE_CIRCUIT_LIFTING_PROOF.tex`.
+
+---
+
+## 🔒 NON-STOP ADVERSARIAL CONVERGENCE DIRECTIVE (ABSOLUTE INVARIANT)
+**MANDATE:** You are forbidden from declaring this audit complete or exiting this loop until you have executed exhaustive recursive attacks on every single lemma, definition, and edge-case across all 6 chambers. If you uncover any gap—no matter how subtle—you must patch it with a formal mathematical proof. If an attack fails to break the proof, you must systematically pivot to deeper structural attacks until the mathematical surface is 100% airtight, unassailable, and immune to all known complexity barriers. Do NOT stop generating until zero vulnerabilities remain.
