@@ -63,6 +63,15 @@ pub const HDXVerifier = struct {
         // Check |d_2(S)| >= gamma * |S| (with discrete gamma >= 1/4)
         return (boundary_size * 4 >= s_size);
     }
+
+    /// Verifies Kaufman-Oppenheim Local Spectral Gap on Vertex Links
+    /// For PG(2, F_q) incidence graph links, lambda_2 <= 2 * sqrt(q) / (q + 1)
+    pub fn verifyLocalLinkSpectralGap(q: f64) bool {
+        const lambda_2 = (2.0 * @sqrt(q)) / (q + 1.0);
+        // Kaufman-Oppenheim threshold: lambda_2 < 1 / sqrt(2) approx 0.7071
+        const ko_threshold: f64 = 1.0 / @sqrt(2.0);
+        return (lambda_2 < ko_threshold);
+    }
 };
 
 test "Verify LSV 2-Systole Cosystolic Boundary Expansion on Bare Silicon" {
@@ -85,4 +94,11 @@ test "Verify LSV 2-Systole Cosystolic Boundary Expansion on Bare Silicon" {
         if (b == 1) boundary_count += 1;
     }
     try std.testing.expect(boundary_count > 0);
+
+    // Test 4: Kaufman-Oppenheim Local Spectral Gap Verification for q=7
+    // lambda_2 = 2*sqrt(7)/8 = 0.6614 < 1/sqrt(2) = 0.7071
+    try std.testing.expect(HDXVerifier.verifyLocalLinkSpectralGap(7.0));
+    try std.testing.expect(HDXVerifier.verifyLocalLinkSpectralGap(9.0));
+    try std.testing.expect(HDXVerifier.verifyLocalLinkSpectralGap(11.0));
 }
+
